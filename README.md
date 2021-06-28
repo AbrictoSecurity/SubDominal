@@ -7,13 +7,15 @@ SubDominal is a subdomain enumeration tool that leverages the top 10,000 subdoma
 ## Install
 ```
 git clone https://github.com/AbrictoSecurity/SubDominal.git
-
-Make sure that you have dnspython installed.
-
-pip3 install dnspython
 ```
 
 ## Run/Operate
 ```
 python3 subdom.py
+```
+
+## Notes
+Make sure that you have dnspython installed.
+```
+pip3 install dnspython
 ```
