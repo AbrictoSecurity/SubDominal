@@ -1,6 +1,8 @@
 import dns.resolver
 import subprocess
 import concurrent.futures
+import json
+import requests
 
 BLUE = '\033[94m'
 GREEN = '\033[92m'
@@ -10,6 +12,24 @@ ERROR = '\033[91m'
 ENDC = '\033[0m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
+
+site2 = []
+def wayback(sites):
+    response = requests.get("https://archive.org/wayback/available?url=" + sites)
+    json_data = json.loads(response.text)
+    try:
+        x = json_data["archived_snapshots"]["closest"]["status"]
+        if x == "200":
+            print(GREEN + "[+] SUCCESS " + sites + ENDC)
+            y = json_data["archived_snapshots"]["closest"]["url"]
+            z: object = json_data["archived_snapshots"]["closest"]["timestamp"]
+
+            input_2 = "echo ' " + sites + " is on the way back machine:  " + y + " with a last saved on: " + z + " ' >> " + domain + "_wayback_scan.txt"
+            subprocess.call(input_2, shell=True)
+
+    except:
+        pass
+
 
 def scandns(sites):
     isp = {"23.202.231.169", "23.221.222.250"}
@@ -45,6 +65,9 @@ def scandns(sites):
             print("[+] Subdomain:" + sites + " : IP being: " + name + "\n")
             up = "echo 'Subdomain Found!!:  " + sites + " with the IP of: " + name + r" \n ' >> ./" + domain + "_subdomain_Scan.txt"
             subprocess.call(up, shell=True)
+            if sites not in site2:
+                current = sites[:]
+                site2.append(current)
 
             q = dns.resolver.resolve(sites, 'CNAME')
             for bong in q:
@@ -54,9 +77,11 @@ def scandns(sites):
                 subprocess.call(inputfile, shell=True)
                 for d in ddns:
                     if d in c_val:
-                        print("\n\t!!!!!we might have a dangler!!!!! " + c_val + " : " + d + " : Subdomain: " + sites)
+                        print(ERROR + "\n\t!!!!!we might have a dangler!!!!! \n\t" + c_val + " : " + d + " : Subdomain: " + sites + "\n\n" + ENDC)
                         inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_Scan.txt "
                         subprocess.call(inputfile, shell=True)
+
+
 
 
 def main():
@@ -89,7 +114,7 @@ def main():
                           / /|_/ / _ `/ _ \/ __/ __/ _ \/ / / 
                          /_/  /_/\_,_/_//_/\__/_/  \___/_/_/  
 
-                                      Version 0.1 
+                                      Version 0.2 
     """ + ENDC)
 
 
@@ -105,12 +130,26 @@ def main():
         if site not in sites:
             current = site[:]
             sites.append(current)
-
+    print(GREEN + "\n\t-----Conducting DNS Subdomain Scan!-----\n" + ENDC)
     up = r"echo '----- SubDomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_Scan.txt"
     subprocess.call(up, shell=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(scandns, sites)
 
+    print(BLUE + "\n\t-----Conducting Wayback Scan!-----\n" + ENDC)
+    up = r"echo '----- Wayback Scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
+    subprocess.call(up, shell=True)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+        executor.map(wayback, site2)
+
+    print(ERROR + "\n\tWe are looking for interesting urls within the Wayback for " + domain + "\n" + ENDC)
+    site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
+    response_2 = requests.get(site_1)
+    response_fin = response_2.text
+    file = open(domain + "_way_osint.txt", "w")
+    file.write(response_fin)
+    file.close()
+    print("Thanks for using SubDominal!")
 
 # call main() function
 if __name__ == '__main__':
