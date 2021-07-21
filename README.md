@@ -2,7 +2,7 @@
 <p align="center">
   <img src="/imgs/subDom.png">
 </p>
-SubDominal is a subdomain enumeration tool that leverages the top 10,000 subdomains to check and see if they exist for a given domain. Then, if it returns a CNAME that's a known dynamic dns provider that's vulnerable to dangling dns pointers, it notifies you.
+SubDominal is a subdomain enumeration tool that leverages the top 10,000 subdomains to check and see if they exist for a given domain. Then, if it returns a CNAME that's a known dynamic dns provider that's vulnerable to dangling dns pointers, it notifies you. It also reviews the Wayback Machine for senstive information and when those subdomains were last saved.
 
 ## Install
 ```
