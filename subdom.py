@@ -3,6 +3,16 @@ import subprocess
 import concurrent.futures
 import json
 import requests
+from shodan import Shodan
+import shodan
+import os
+
+### CONFIG API Keys ###
+####Shodan API KEY GOES HERE!!!!###
+s_api_key = ""
+#
+###################
+
 
 BLUE = '\033[94m'
 GREEN = '\033[92m'
@@ -14,6 +24,9 @@ BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
 
 site2 = []
+ips = []
+
+
 def wayback(sites):
     response = requests.get("https://archive.org/wayback/available?url=" + sites)
     json_data = json.loads(response.text)
@@ -40,8 +53,10 @@ def scandns(sites):
             ".sendgrid.net", ".feedpress.me", ".fastly.net", ".webflow.io", ".proxy.webflow.com", ".helpscoutdocs.com",
             ".readmessl.com", ".desk.com", ".zendesk.com", ".mktoweb.com", ".wordpress.com", ".wpengine.com",
             ".cloudflare.net", ".netlify.com", ".bydiscourse.com", ".netdna-cdn.com", ".pageserve.co",
-            ".pantheonsite.io", ".arlo.co", ".apigee.net", ".pmail5.com", ".cm-hosting.com", ".ext-cust.squarespace.com",
-            ".ext.squarespace.com", ".www.squarespace6.com", ".locationinsight.com", ".helpsite.io", ".saas.moonami.com",
+            ".pantheonsite.io", ".arlo.co", ".apigee.net", ".pmail5.com", ".cm-hosting.com",
+            ".ext-cust.squarespace.com",
+            ".ext.squarespace.com", ".www.squarespace6.com", ".locationinsight.com", ".helpsite.io",
+            ".saas.moonami.com",
             ".custom.bnc.lt", ".qualtrics.com", ".dotcmscloud.net", ".dotcmscloud.com", ".knowledgeowl.com",
             ".atlashost.eu", "headwayapp.co", ".domain.pixieset.com", ".cname.bitly.com", ".awmdm.com", ".meteor.com",
             ".postaffiliatepro.com", ".na.iso.postaffiliatepro.com", ".copiny.com", ".kxcdn.com", ".phs.getpostman.com",
@@ -49,7 +64,8 @@ def scandns(sites):
             ".mashery.com", ".edgesuite.net", ".akadns.net", ".edgekey.net", '.akamaiedge.net', ".edgekey-staging.net",
             ".lldns.net", ".edgecastcdn.net", "centercode.com", ".jivesoftware.com", ".cvent.com", ".covisint.com",
             ".digitalrivercontent.net", ".akahost.net", ".connectedcommunity.org", ".lithium.com", ".sl.smartling.com",
-            ".pfsweb.com", ".bsd.net", ".vovici.net", ".extole.com", ".ent-sessionm.com", ".eloqua.com", ".inscname.net",
+            ".pfsweb.com", ".bsd.net", ".vovici.net", ".extole.com", ".ent-sessionm.com", ".eloqua.com",
+            ".inscname.net",
             ".insnw.net", ".2o7.net", ".wnmh.net", ".footprint.net", ".llnwd.net", ".cust.socrata.net", ".scrool.se",
             ".phenompeople.com", ".investis.com", ".skilljar.com", ".imomentous.com", ".cleverbridge.com", ".insnw.net",
             ".sailthru.com", ".static.captora.com", ".q4web.com", ".omtrdc.net", ".devzing.com", ".pphosted.com",
@@ -72,6 +88,9 @@ def scandns(sites):
                     if sites not in site2:
                         current = sites[:]
                         site2.append(current)
+                    if name not in ips:
+                        current = name[:]
+                        ips.append(current)
                     q = dns.resolver.resolve(sites, 'CNAME')
                     for bong in q:
                         c_val = str(bong.target)
@@ -80,15 +99,70 @@ def scandns(sites):
                         subprocess.call(inputfile, shell=True)
                         for d in ddns:
                             if d in c_val:
-                                print(ERROR + "\n\t!!!!!we might have a dangler!!!!! \n\t" + c_val + " : " + d + " : Subdomain: " + sites + "\n\n" + ENDC)
+                                print(
+                                    ERROR + "\n\t!!!!!we might have a dangler!!!!! \n\t" + c_val + " : " + d + " : Subdomain: " + sites + "\n\n" + ENDC)
                                 inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_Scan.txt "
                                 subprocess.call(inputfile, shell=True)
 
 
+def shodan_scan(ipss):
+    no_ip = {"127.0.0.1"}
+    for ip in ips:
+        if ip not in no_ip:
+            try:
+                api = Shodan(s_api_key)
+                data = api.search(ip)
+                file = shodan_folder + "/" + ip + "_shodan_scan.txt"
+                print(BLUE + "[+] -- Shodan Scan on - " + WHITE + BOLD + ip + ENDC)
+                file1 = 'Here is the Shodan scan results for {}\n'.format(ip)
+                file1 += 'Take a look at all of the data.. You might find something cool! \n'
+                file1 += '------------------------------------\n'
+                file1 += '------------------------------------\n'
+                dat = json.dumps(data)
+                file1 += "{}".format(dat)
+                file1 += "\n\n*************************MARANTRAL******************************\n\n"
+                file1 += "\n\n*************************MARANTRAL******************************\n\n"
+                file1 += "\n\n*************************MARANTRAL******************************\n\n"
+                filewrite = open(file, "w")
+                filewrite.write(file1)
+                filewrite.close()
+
+            except shodan.APIError as e:
+                print("\nThere was an Error: ")
+                print(e)
+                pass
+
+
+
+def shodan_scan_domain(sites):
+    for site in site2:
+        try:
+            api = Shodan(s_api_key)
+            data = api.search(site)
+            file = shodan_folder + "/" + site + "_shodan_scan.txt"
+            print(BLUE + "[+] -- Shodan Scan on - " + WHITE + BOLD + site + ENDC)
+            file1 = 'Here is the Shodan scan results for {}\n'.format(site)
+            file1 += 'Take a look at all of the data.. You might find something cool! \n'
+            file1 += '------------------------------------\n'
+            file1 += '------------------------------------\n'
+            dat = json.dumps(data)
+            file1 += "{}".format(dat)
+            file1 += "\n\n*************************MARANTRAL******************************\n\n"
+            file1 += "\n\n*************************MARANTRAL******************************\n\n"
+            file1 += "\n\n*************************MARANTRAL******************************\n\n"
+            filewrite = open(file, "w")
+            filewrite.write(file1)
+            filewrite.close()
+
+        except shodan.APIError as e:
+            print("\nThere was an Error: ")
+            print(e)
+            pass
 
 
 def main():
     global domain
+    global shodan_folder
 
     print(BOLD + ERROR + r"""
                  _____       _     _____                  _             _                  
@@ -117,7 +191,7 @@ def main():
                           / /|_/ / _ `/ _ \/ __/ __/ _ \/ / / 
                          /_/  /_/\_,_/_//_/\__/_/  \___/_/_/  
 
-                                      Version 0.2 
+                                      Version 0.3 
     """ + ENDC)
 
     print(BLUE + "\n\tWhen you put in the domain to be scanned use the parent domain!")
@@ -168,11 +242,23 @@ def main():
         print(BLUE + "\n\tPotential interesting parameter found!: " + BOLD + ERROR + r + ENDC)
 
     print(BLUE + "\n\tThere might be interesting things within the parameters. However, we might not found them "
-                         "automaticly.\n\tTake a look!!" + ENDC)
+                 "automaticly.\n\tTake a look!!" + ENDC)
+
+    shodan_folder = domain + "_Shodan"
+    if s_api_key != "":
+        try:
+            os.mkdir(shodan_folder)
+        except:
+            pass
+        print(GREEN + "\n\t-----Conducting Shodan Scan!-----\n" + ENDC)
+        shodan_scan(ips)
+        shodan_scan_domain(site2)
+
 
     print("\n\tOutput files are: \n\t" + GREEN + domain + "_subdomain_Scan.txt \n\t" + domain
-          + "_wayback_scan.txt \n\t" + domain + "_way_osint.txt\n" + ENDC)
-    print("Thanks for using SubDominal!")
+          + "_wayback_scan.txt \n\t" + domain + "_way_osint.txt\n" + "\n\n\tShodan scans in: " + shodan_folder + ENDC)
+    print(BOLD + "\n\nThanks for using SubDominal!\n\n" + ENDC)
+
 
 # call main() function
 if __name__ == '__main__':
