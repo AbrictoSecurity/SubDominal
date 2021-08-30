@@ -77,12 +77,12 @@ def scandns(sites):
         if name in isp:
             pass
         else:
-            with open(domain + "_subdomain_Scan.txt") as file:
+            with open(domain + "_subdomain_scan.txt") as file:
                 if sites in file.read():
                     pass
                 else:
                     print("[+] Subdomain:" + sites + " : IP being: " + name + "\n")
-                    up = "echo 'Subdomain Found!:  " + sites + " with the IP of: " + name + r" \n ' >> /" + domain + "_subdomain_scan.txt"
+                    up = "echo 'Subdomain Found!:  " + sites + " with the IP of: " + name + r" \n ' >> ./" + domain + "_subdomain_scan.txt"
                     subprocess.call(up, shell=True)
                     if sites not in site2:
                         current = sites[:]
@@ -94,13 +94,13 @@ def scandns(sites):
                     for bong in q:
                         c_val = str(bong.target)
                         print(GREEN + "\n[+] The CNAME for " + sites + " is: " + c_val + ENDC)
-                        inputfile = "echo '  CNAME Results for " + sites + " is:  " + c_val + r" \n' >> /" + domain + "_subdomain_Scan.txt"
+                        inputfile = "echo '  CNAME Results for " + sites + " is:  " + c_val + r" \n' >> ./" + domain + "_subdomain_scan.txt"
                         subprocess.call(inputfile, shell=True)
                         for d in ddns:
                             if d in c_val:
                                 print(
                                     ERROR + "\n\t This subdomain may be vulnerable to dangling DNS pointers, manually verify. \n\t" + c_val + " : " + d + " : Subdomain: " + sites + "\n\n" + ENDC)
-                                inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_Scan.txt "
+                                inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_scan.txt "
                                 subprocess.call(inputfile, shell=True)
 
 def shodan_scan(ipss):
