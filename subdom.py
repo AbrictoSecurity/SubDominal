@@ -8,9 +8,8 @@ import shodan
 import os
 
 ### CONFIG API Keys ###
-####Shodan API KEY GOES HERE!!!!###
+#### Shodan API KEY GOES HERE ###
 s_api_key = ""
-#
 ###################
 
 
@@ -83,7 +82,7 @@ def scandns(sites):
                     pass
                 else:
                     print("[+] Subdomain:" + sites + " : IP being: " + name + "\n")
-                    up = "echo 'Subdomain Found!!:  " + sites + " with the IP of: " + name + r" \n ' >> ./" + domain + "_subdomain_Scan.txt"
+                    up = "echo 'Subdomain Found!:  " + sites + " with the IP of: " + name + r" \n ' >> /" + domain + "_subdomain_scan.txt"
                     subprocess.call(up, shell=True)
                     if sites not in site2:
                         current = sites[:]
@@ -95,15 +94,14 @@ def scandns(sites):
                     for bong in q:
                         c_val = str(bong.target)
                         print(GREEN + "\n[+] The CNAME for " + sites + " is: " + c_val + ENDC)
-                        inputfile = "echo '  CNAME Results for " + sites + " is:  " + c_val + r" \n' >> ./" + domain + "_subdomain_Scan.txt"
+                        inputfile = "echo '  CNAME Results for " + sites + " is:  " + c_val + r" \n' >> /" + domain + "_subdomain_Scan.txt"
                         subprocess.call(inputfile, shell=True)
                         for d in ddns:
                             if d in c_val:
                                 print(
-                                    ERROR + "\n\t!!!!!we might have a dangler!!!!! \n\t" + c_val + " : " + d + " : Subdomain: " + sites + "\n\n" + ENDC)
+                                    ERROR + "\n\t This subdomain may be vulnerable to dangling DNS pointers, manually verify. \n\t" + c_val + " : " + d + " : Subdomain: " + sites + "\n\n" + ENDC)
                                 inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_Scan.txt "
                                 subprocess.call(inputfile, shell=True)
-
 
 def shodan_scan(ipss):
     no_ip = {"127.0.0.1"}
@@ -115,7 +113,7 @@ def shodan_scan(ipss):
                 file = shodan_folder + "/" + ip + "_shodan_scan.txt"
                 print(BLUE + "[+] -- Shodan Scan on - " + WHITE + BOLD + ip + ENDC)
                 file1 = 'Here is the Shodan scan results for {}\n'.format(ip)
-                file1 += 'Take a look at all of the data.. You might find something cool! \n'
+                file1 += 'Take a look at all of the data. You might find something cool! \n'
                 file1 += '------------------------------------\n'
                 file1 += '------------------------------------\n'
                 dat = json.dumps(data)
@@ -142,7 +140,7 @@ def shodan_scan_domain(sites):
             file = shodan_folder + "/" + site + "_shodan_scan.txt"
             print(BLUE + "[+] -- Shodan Scan on - " + WHITE + BOLD + site + ENDC)
             file1 = 'Here is the Shodan scan results for {}\n'.format(site)
-            file1 += 'Take a look at all of the data.. You might find something cool! \n'
+            file1 += 'Take a look at all of the data. You might find something cool! \n'
             file1 += '------------------------------------\n'
             file1 += '------------------------------------\n'
             dat = json.dumps(data)
@@ -191,13 +189,13 @@ def main():
                           / /|_/ / _ `/ _ \/ __/ __/ _ \/ / / 
                          /_/  /_/\_,_/_//_/\__/_/  \___/_/_/  
 
-                                      Version 0.3 
+                                      Version 0.4 
     """ + ENDC)
 
-    print(BLUE + "\n\tWhen you put in the domain to be scanned use the parent domain!")
+    print(BLUE + "\n\tWhen defining the domain to be scanned, use the parent domain.")
     print("\tLike: 'google.com' or 'company.org'\n\n" + ENDC)
 
-    domain = input("what is the domain to be scanned?: ").strip()
+    domain = input("Please enter the target domain: ").strip()
 
     file = open("./lib/subdomains-10000.txt")
     content = file.read()
@@ -208,19 +206,19 @@ def main():
         if site not in sites:
             current = site[:]
             sites.append(current)
-    print(GREEN + "\n\t-----Conducting DNS Subdomain Scan!-----\n" + ENDC)
-    up = r"echo '----- SubDomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_Scan.txt"
+    print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
+    up = r"echo '----- Subdomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_scan.txt"
     subprocess.call(up, shell=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(scandns, sites)
 
-    print(BLUE + "\n\t-----Conducting Wayback Scan!-----\n" + ENDC)
-    up = r"echo '----- Wayback Scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
+    print(BLUE + "\n\t-----Conducting Wayback Machine Scan-----\n" + ENDC)
+    up = r"echo '----- Wayback scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
     subprocess.call(up, shell=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(wayback, site2)
 
-    print(GREEN + "\n\t-----We are looking for interesting urls within the Wayback for " + domain + "-----\n" + ENDC)
+    print(GREEN + "\n\t-----We are looking for interesting urls within the Wayback Machine for " + domain + "-----\n" + ENDC)
     site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
     response_2 = requests.get(site_1)
     response_fin = response_2.text
@@ -228,21 +226,16 @@ def main():
     file.write(response_fin)
     file.close()
 
-    pars = ["user", "pass", "password", "pword", "username", "USER", "Pass", "token", "UserName", "Token", "secret",
-            "email", "Password", "User", "admin", "Administrator", "ADMIN", "Admin", "jsession", "userid", ]
+    pars = ["user=", "pass=", "password=", "pword=", "username=", "token=", "secret=",
+            "email=", "admin=", "administrator=", "jsession=", "jsessionid=", "userid=", ]
 
-    risk = []
     for p in pars:
-        if p in response_fin:
-            if p not in risk:
-                current = p[:]
-                risk.append(current)
+        for line in response_2.iter_lines():
+            if p in line.decode("utf-8").lower():
+                print(BLUE + "\n\tPotential interesting " + p + " parameter found: " + BOLD + ERROR + line.decode("utf-8") + ENDC)
 
-    for r in risk:
-        print(BLUE + "\n\tPotential interesting parameter found!: " + BOLD + ERROR + r + ENDC)
-
-    print(BLUE + "\n\tThere might be interesting things within the parameters. However, we might not found them "
-                 "automaticly.\n\tTake a look!!" + ENDC)
+    print(BLUE + "\n\tThere might be other interesting values within the parameters that we might not have found "
+                 "automatically.\n\tTake a look manually!" + ENDC)
 
     shodan_folder = domain + "_Shodan"
     if s_api_key != "":
@@ -250,12 +243,12 @@ def main():
             os.mkdir(shodan_folder)
         except:
             pass
-        print(GREEN + "\n\t-----Conducting Shodan Scan!-----\n" + ENDC)
+        print(GREEN + "\n\t-----Conducting Shodan Scan-----\n" + ENDC)
         shodan_scan(ips)
         shodan_scan_domain(site2)
 
 
-    print("\n\tOutput files are: \n\t" + GREEN + domain + "_subdomain_Scan.txt \n\t" + domain
+    print("\n\tOutput files are: \n\t" + GREEN + domain + "_subdomain_scan.txt \n\t" + domain
           + "_wayback_scan.txt \n\t" + domain + "_way_osint.txt\n" + "\n\n\tShodan scans in: " + shodan_folder + ENDC)
     print(BOLD + "\n\nThanks for using SubDominal!\n\n" + ENDC)
 
