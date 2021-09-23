@@ -9,7 +9,7 @@ SubDominal is a subdomain enumeration tool that leverages the top 10,000 subdoma
 git clone https://github.com/AbrictoSecurity/SubDominal.git
 ```
 
-## Add Shodan Scan
+## Add Shodan API Key
 ```
 cd SubDominal
 nano subdom.py
