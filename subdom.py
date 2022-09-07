@@ -6,6 +6,11 @@ import requests
 from shodan import Shodan
 import shodan
 import os
+from itertools import product
+from string import ascii_lowercase
+keywords_2 = [''.join(i) for i in product(ascii_lowercase, repeat = 2)]
+keywords_3 = [''.join(i) for i in product(ascii_lowercase, repeat = 3)]
+keywords_4 = [''.join(i) for i in product(ascii_lowercase, repeat = 4)]
 
 ### CONFIG API Keys ###
 #### Shodan API KEY GOES HERE ###
@@ -206,6 +211,28 @@ def main():
         if site not in sites:
             current = site[:]
             sites.append(current)
+
+    for subdomain in keywords_2:
+        site = subdomain + "." + domain
+        if site not in sites:
+            current = site[:]
+            sites.append(current)
+    for subdomain in keywords_3:
+        site = subdomain + "." + domain
+        if site not in sites:
+            current = site[:]
+            sites.append(current)
+    for subdomain in keywords_4:
+        site = subdomain + "." + domain
+        if site not in sites:
+            current = site[:]
+            sites.append(current)
+    for dom in site2:
+        for subdomain in subdomains:
+            site = subdomain + "." + dom
+            if site not in sites:
+                current = site[:]
+                sites.append(current)
     print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
     up = r"echo '----- Subdomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_scan.txt"
     subprocess.call(up, shell=True)
