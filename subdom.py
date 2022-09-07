@@ -238,6 +238,27 @@ def main():
     subprocess.call(up, shell=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(scandns, sites)
+    new_sites = []
+    for dom in site2:
+        for subdomain in subdomains:
+            site = subdomain + "." + dom
+            if site not in new_sites:
+                current = site[:]
+                new_sites.append(current)
+    new_sites = []
+    for subdomain in keywords_2:
+        site = subdomain + "." + dom
+        if site not in new_sites:
+            current = site[:]
+            new_sites.append(current)
+    for subdomain in keywords_3:
+            site = subdomain + "." + dom
+            if site not in new_sites:
+                current = site[:]
+                new_sites.append(current)
+    print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+        executor.map(scandns, new_sites)
 
     print(BLUE + "\n\t-----Conducting Wayback Machine Scan-----\n" + ENDC)
     up = r"echo '----- Wayback scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
