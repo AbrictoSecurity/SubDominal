@@ -245,17 +245,17 @@ def main():
             if site not in new_sites:
                 current = site[:]
                 new_sites.append(current)
-    new_sites = []
-    for subdomain in keywords_2:
-        site = subdomain + "." + dom
-        if site not in new_sites:
-            current = site[:]
-            new_sites.append(current)
-    for subdomain in keywords_3:
+
+        for subdomain in keywords_2:
             site = subdomain + "." + dom
             if site not in new_sites:
                 current = site[:]
                 new_sites.append(current)
+        for subdomain in keywords_3:
+                site = subdomain + "." + dom
+                if site not in new_sites:
+                    current = site[:]
+                    new_sites.append(current)
     print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(scandns, new_sites)
