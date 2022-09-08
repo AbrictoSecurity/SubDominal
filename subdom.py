@@ -226,14 +226,12 @@ def main():
             if current not in bf_doc:
                 bf_doc.append(current)
         file.close()
-
+    sites = []
     print("got past two")
     try:
         file = open(args.sub)
         content = file.read()
-        bf_doc = content.splitlines()
-        file.close()
-        add = []
+        add = content.splitlines()
         file.close()
         aditional = True
         print("got past 3")
@@ -279,6 +277,12 @@ def main():
                 if site not in new_sites:
                     current = site[:]
                     new_sites.append(current)
+            if aditional:
+                for subdomain in add:
+                    site = subdomain + "." + dom
+                    if site not in new_sites:
+                        current = site[:]
+                        new_sites.append(current)
 
         print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
