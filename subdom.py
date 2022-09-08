@@ -215,6 +215,7 @@ def main():
     content = file.read()
     subdomains = content.splitlines()
     file.close()
+    print("got past one")
     names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
              'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw', 'xax']
     bf_doc = []
@@ -224,6 +225,7 @@ def main():
         bf_doc += content.splitlines()
         file.close()
         sites = []
+        print("got past two")
     try:
         file = open(args.sub)
         content = file.read()
@@ -232,6 +234,7 @@ def main():
         add = []
         file.close()
         aditional = True
+        print("got past 3")
     except:
         aditional = False
         pass
@@ -252,6 +255,7 @@ def main():
             if site not in sites:
                 current = site[:]
                 sites.append(current)
+    print("got past 4")
 
     print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
     up = r"echo '----- Subdomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_scan.txt"
