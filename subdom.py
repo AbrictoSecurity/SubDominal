@@ -6,11 +6,20 @@ import requests
 from shodan import Shodan
 import shodan
 import os
-from itertools import product
-from string import ascii_lowercase
-keywords_2 = [''.join(i) for i in product(ascii_lowercase, repeat = 2)]
-keywords_3 = [''.join(i) for i in product(ascii_lowercase, repeat = 3)]
-keywords_4 = [''.join(i) for i in product(ascii_lowercase, repeat = 4)]
+import argparse
+
+
+parser = argparse.ArgumentParser(description='Subdomain Eunmeration tool')
+parser.add_argument('--domain', '-d', dest="domain", type=str, required=True,
+                    help='When defining the domain to be scanned, use the parent domain.\n\tLike: google.com or '
+                         'company.org')
+parser.add_argument('--sub', '-s', dest="sub", type=str,
+                    help='Additonal subdomain list.')
+parser.add_argument("--brute", '-b', default=False, action="store_true")
+parser.add_argument("--deep", '-d', default=False, action="store_true")
+
+args = parser.parse_args()
+
 
 ### CONFIG API Keys ###
 #### Shodan API KEY GOES HERE ###
@@ -200,65 +209,70 @@ def main():
     print(BLUE + "\n\tWhen defining the domain to be scanned, use the parent domain.")
     print("\tLike: 'google.com' or 'company.org'\n\n" + ENDC)
 
-    domain = input("Please enter the target domain: ").strip()
+    domain = args.domain
 
     file = open("./lib/subdomains-10000.txt")
     content = file.read()
     subdomains = content.splitlines()
+    file.close()
+    file = open("./lib/testlist.txt")
+    content = file.read()
+    bf_doc = content.splitlines()
+    file.close()
     sites = []
+    try:
+        file = open(args.sub)
+        content = file.read()
+        bf_doc = content.splitlines()
+        file.close()
+        add = []
+        file.close()
+        aditional = True
+    except:
+        aditional = False
+        pass
     for subdomain in subdomains:
         site = subdomain + "." + domain
         if site not in sites:
             current = site[:]
             sites.append(current)
-
-    for subdomain in keywords_2:
-        site = subdomain + "." + domain
-        if site not in sites:
-            current = site[:]
-            sites.append(current)
-    for subdomain in keywords_3:
-        site = subdomain + "." + domain
-        if site not in sites:
-            current = site[:]
-            sites.append(current)
-    for subdomain in keywords_4:
-        site = subdomain + "." + domain
-        if site not in sites:
-            current = site[:]
-            sites.append(current)
-    for dom in site2:
-        for subdomain in subdomains:
-            site = subdomain + "." + dom
+    if args.brute:
+        for subdomain in bf_doc:
+            site = subdomain + "." + domain
             if site not in sites:
                 current = site[:]
                 sites.append(current)
+    if aditional:
+        for subdomain in add:
+            site = subdomain + "." + domain
+            if site not in sites:
+                current = site[:]
+                sites.append(current)
+
     print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
     up = r"echo '----- Subdomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_scan.txt"
     subprocess.call(up, shell=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(scandns, sites)
-    new_sites = []
-    for dom in site2:
-        for subdomain in subdomains:
-            site = subdomain + "." + dom
-            if site not in new_sites:
-                current = site[:]
-                new_sites.append(current)
-
-        for subdomain in keywords_2:
-            site = subdomain + "." + dom
-            if site not in new_sites:
-                current = site[:]
-                new_sites.append(current)
-        for subdomain in keywords_3:
+        
+    if args.deep:
+        new_sites = []
+        for dom in site2:
+            for subdomain in subdomains:
                 site = subdomain + "." + dom
                 if site not in new_sites:
                     current = site[:]
                     new_sites.append(current)
-    print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-        executor.map(scandns, new_sites)
+
+            for subdomain in bf_doc:
+                site = subdomain + "." + dom
+                if site not in new_sites:
+                    current = site[:]
+                    new_sites.append(current)
+
+        print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(scandns, new_sites)
 
     print(BLUE + "\n\t-----Conducting Wayback Machine Scan-----\n" + ENDC)
     up = r"echo '----- Wayback scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
