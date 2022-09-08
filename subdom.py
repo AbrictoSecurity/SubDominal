@@ -215,11 +215,15 @@ def main():
     content = file.read()
     subdomains = content.splitlines()
     file.close()
-    file = open("./lib/testlist.txt")
-    content = file.read()
-    bf_doc = content.splitlines()
-    file.close()
-    sites = []
+    names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
+             'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw', 'xax']
+    bf_doc = []
+    for ns in names:
+        file = open("./lib/" + ns)
+        content = file.read()
+        bf_doc += content.splitlines()
+        file.close()
+        sites = []
     try:
         file = open(args.sub)
         content = file.read()
