@@ -219,13 +219,14 @@ def main():
     names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
              'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw', 'xax']
     bf_doc = []
-    for ns in names:
-        file = open("./lib/" + ns)
-        for line in file:
-            current = line.strip()
-            if current not in bf_doc:
-                bf_doc.append(current)
-        file.close()
+    if args.brute:
+        for ns in names:
+            file = open("./lib/" + ns)
+            for line in file:
+                current = line.strip()
+                if current not in bf_doc:
+                    bf_doc.append(current)
+            file.close()
     sites = []
     print("got past two")
     try:
@@ -271,12 +272,12 @@ def main():
                 if site not in new_sites:
                     current = site[:]
                     new_sites.append(current)
-
-            for subdomain in bf_doc:
-                site = subdomain + "." + dom
-                if site not in new_sites:
-                    current = site[:]
-                    new_sites.append(current)
+            if args.brute:
+                for subdomain in bf_doc:
+                    site = subdomain + "." + dom
+                    if site not in new_sites:
+                        current = site[:]
+                        new_sites.append(current)
             if aditional:
                 for subdomain in add:
                     site = subdomain + "." + dom
