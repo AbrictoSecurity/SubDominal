@@ -254,7 +254,7 @@ def main():
     subprocess.call(up, shell=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(scandns, sites)
-        
+
     if args.deep:
         new_sites = []
         for dom in site2:
