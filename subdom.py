@@ -221,11 +221,13 @@ def main():
     bf_doc = []
     for ns in names:
         file = open("./lib/" + ns)
-        content = file.read()
-        bf_doc += content.splitlines()
+        for line in file:
+            current = line.strip()
+            if current not in bf_doc:
+                bf_doc.append(current)
         file.close()
-        sites = []
-        print("got past two")
+
+    print("got past two")
     try:
         file = open(args.sub)
         content = file.read()
