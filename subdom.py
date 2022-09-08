@@ -15,8 +15,8 @@ parser.add_argument('--domain', '-d', dest="domain", type=str, required=True,
                          'company.org')
 parser.add_argument('--sub', '-s', dest="sub", type=str,
                     help='Additonal subdomain list.')
-parser.add_argument("--brute", '-b', default=False, action="store_true")
-parser.add_argument("--deep", "-d", default=False, action="store_true")
+parser.add_argument('--brute', '-b', default=False, action="store_true")
+parser.add_argument('--deep', '-d', default=False, action="store_true")
 
 args = parser.parse_args()
 
