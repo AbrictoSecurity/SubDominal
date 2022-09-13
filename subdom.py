@@ -7,6 +7,8 @@ from shodan import Shodan
 import shodan
 import os
 import argparse
+import time
+from progress.bar import IncrementalBar
 
 
 parser = argparse.ArgumentParser(description='Subdomain Eunmeration tool')
@@ -216,8 +218,10 @@ def main():
     subdomains = content.splitlines()
     file.close()
     print("got past one")
-    names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
-             'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw', 'xax']
+    #names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
+     #        'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw']
+    names = ['testlist.txt']
+    bar = IncrementalBar('Loading', max=2141452)
     bf_doc = []
     if args.brute:
         for ns in names:
@@ -246,6 +250,7 @@ def main():
             sites.append(current)
     if args.brute:
         for subdomain in bf_doc:
+            bar.next()
             site = subdomain + "." + domain
             if site not in sites:
                 current = site[:]
