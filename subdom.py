@@ -149,6 +149,7 @@ def shodan_scan(ipss):
 def add_file_content(bar, ns):
 
     file = open("./lib/" + ns)
+    print("boom")
     for line in file:
         bar.next()
         current = line.strip()
@@ -232,6 +233,7 @@ def main():
     bar = IncrementalBar('Loading values', max=2141452)
 
     if args.brute:
+        print("adding values")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
     sites = []
