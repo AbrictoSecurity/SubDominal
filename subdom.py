@@ -146,7 +146,7 @@ def shodan_scan(ipss):
                 pass
 
 
-def add_file_content(bar, ns):
+def add_file_content(ns):
 
     file = open("./lib/" + ns)
     print("boom")
