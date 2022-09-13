@@ -221,12 +221,13 @@ def main():
     #names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
      #        'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw']
     names = ['testlist.txt']
-    bar = IncrementalBar('Loading', max=2141452)
+    bar1 = IncrementalBar('Loading values', max=2141452)
     bf_doc = []
     if args.brute:
         for ns in names:
             file = open("./lib/" + ns)
             for line in file:
+                bar1.next()
                 current = line.strip()
                 if current not in bf_doc:
                     bf_doc.append(current)
@@ -249,8 +250,9 @@ def main():
             current = site[:]
             sites.append(current)
     if args.brute:
+        bar2 = IncrementalBar('Creating possible subdomains', max=2141452)
         for subdomain in bf_doc:
-            bar.next()
+            bar2.next()
             site = subdomain + "." + domain
             if site not in sites:
                 current = site[:]
