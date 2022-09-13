@@ -22,6 +22,7 @@ parser.add_argument('--deep', '-dp', default=False, action="store_true")
 args = parser.parse_args()
 
 bf_doc = []
+sites = []
 ### CONFIG API Keys ###
 #### Shodan API KEY GOES HERE ###
 s_api_key = ""
@@ -149,13 +150,20 @@ def shodan_scan(ipss):
 def add_file_content(ns):
 
     file = open("./lib/" + ns)
-    print("boom")
     for line in file:
         bar.next()
         current = line.strip()
         if current not in bf_doc:
             bf_doc.append(current)
     file.close()
+
+
+def create_domain(subdomain):
+    bar2.next()
+    site = subdomain + "." + domain
+    if site not in sites:
+        current = site[:]
+        sites.append(current)
 
 
 def shodan_scan_domain(sites):
@@ -187,7 +195,7 @@ def shodan_scan_domain(sites):
 def main():
     global domain
     global shodan_folder
-    global bar
+    global bar, bar2
 
     print(BOLD + ERROR + r"""
                  _____       _     _____                  _             _                  
@@ -236,7 +244,6 @@ def main():
         print("adding values")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
-    sites = []
     print("got past two")
     try:
         file = open(args.sub)
@@ -255,12 +262,9 @@ def main():
             sites.append(current)
     if args.brute:
         bar2 = IncrementalBar('Creating possible subdomains', max=2141452)
-        for subdomain in bf_doc:
-            bar2.next()
-            site = subdomain + "." + domain
-            if site not in sites:
-                current = site[:]
-                sites.append(current)
+        print("Creating domain possibilities ")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(create_domain, bf_doc)
     if aditional:
         for subdomain in add:
             site = subdomain + "." + domain
