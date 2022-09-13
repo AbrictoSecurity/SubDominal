@@ -241,7 +241,7 @@ def main():
     bar = IncrementalBar('Loading values', max=2141452)
 
     if args.brute:
-        print("adding values")
+        print("----Adding values----")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
     try:
@@ -260,7 +260,7 @@ def main():
             sites.append(current)
     if args.brute:
         bar2 = IncrementalBar('Creating possible subdomains', max=2141452)
-        print("Creating domain possibilities ")
+        print("----Creating domain possibilities----")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
     if additional:
