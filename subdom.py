@@ -7,7 +7,6 @@ from shodan import Shodan
 import shodan
 import os
 import argparse
-import time
 from progress.bar import IncrementalBar
 
 
@@ -22,7 +21,7 @@ parser.add_argument('--deep', '-dp', default=False, action="store_true")
 
 args = parser.parse_args()
 
-
+bf_doc = []
 ### CONFIG API Keys ###
 #### Shodan API KEY GOES HERE ###
 s_api_key = ""
@@ -147,6 +146,16 @@ def shodan_scan(ipss):
                 pass
 
 
+def add_file_content(bar, ns):
+
+    file = open("./lib/" + ns)
+    for line in file:
+        bar.next()
+        current = line.strip()
+        if current not in bf_doc:
+            bf_doc.append(current)
+    file.close()
+
 
 def shodan_scan_domain(sites):
     for site in site2:
@@ -218,20 +227,12 @@ def main():
     subdomains = content.splitlines()
     file.close()
     print("got past one")
-    #names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak', 'xal', 'xam',
-     #        'xan', 'xao', 'xap', 'xaq', 'xar', 'xas', 'xat', 'xau', 'xav', 'xaw']
-    names = ['testlist.txt']
+    names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak']
     bar1 = IncrementalBar('Loading values', max=2141452)
-    bf_doc = []
+
     if args.brute:
-        for ns in names:
-            file = open("./lib/" + ns)
-            for line in file:
-                bar1.next()
-                current = line.strip()
-                if current not in bf_doc:
-                    bf_doc.append(current)
-            file.close()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(add_file_content, bar1, names)
     sites = []
     print("got past two")
     try:
