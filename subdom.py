@@ -186,6 +186,7 @@ def shodan_scan_domain(sites):
 def main():
     global domain
     global shodan_folder
+    global bar
 
     print(BOLD + ERROR + r"""
                  _____       _     _____                  _             _                  
@@ -228,11 +229,11 @@ def main():
     file.close()
     print("got past one")
     names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak']
-    bar1 = IncrementalBar('Loading values', max=2141452)
+    bar = IncrementalBar('Loading values', max=2141452)
 
     if args.brute:
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-            executor.map(add_file_content, bar1, names)
+            executor.map(add_file_content, names)
     sites = []
     print("got past two")
     try:
