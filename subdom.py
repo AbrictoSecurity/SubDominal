@@ -237,7 +237,6 @@ def main():
     content = file.read()
     subdomains = content.splitlines()
     file.close()
-    print("got past one")
     names = ['xaa', 'xab', 'xac', 'xad', 'xae', 'xaf', 'xag', 'xah', 'xai', 'xaj', 'xak']
     bar = IncrementalBar('Loading values', max=2141452)
 
@@ -245,16 +244,14 @@ def main():
         print("adding values")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
-    print("got past two")
     try:
         file = open(args.sub)
         content = file.read()
         add = content.splitlines()
         file.close()
-        aditional = True
-        print("got past 3")
+        additional = True
     except:
-        aditional = False
+        additional = False
         pass
     for subdomain in subdomains:
         site = subdomain + "." + domain
@@ -266,13 +263,12 @@ def main():
         print("Creating domain possibilities ")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
-    if aditional:
+    if additional:
         for subdomain in add:
             site = subdomain + "." + domain
             if site not in sites:
                 current = site[:]
                 sites.append(current)
-    print("got past 4")
 
     print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
     up = r"echo '----- Subdomain Scan of " + domain + r" ----- \n\n' > ./" + domain + "_subdomain_scan.txt"
@@ -288,7 +284,7 @@ def main():
                     current = site[:]
                     new_sites.append(current)
 
-            if aditional:
+            if additional:
                 for subdomain in add:
                     site = subdomain + "." + dom
                     if site not in new_sites:
