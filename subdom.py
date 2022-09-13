@@ -23,6 +23,7 @@ args = parser.parse_args()
 
 bf_doc = []
 sites = []
+new_sites = []
 ### CONFIG API Keys ###
 #### Shodan API KEY GOES HERE ###
 s_api_key = ""
@@ -280,25 +281,25 @@ def main():
         executor.map(scandns, sites)
 
     if args.deep:
-        new_sites = []
         for dom in site2:
             for subdomain in subdomains:
                 site = subdomain + "." + dom
                 if site not in new_sites:
                     current = site[:]
                     new_sites.append(current)
-            if args.brute:
-                for subdomain in bf_doc:
-                    site = subdomain + "." + dom
-                    if site not in new_sites:
-                        current = site[:]
-                        new_sites.append(current)
+
             if aditional:
                 for subdomain in add:
                     site = subdomain + "." + dom
                     if site not in new_sites:
                         current = site[:]
                         new_sites.append(current)
+    #    if args.brute:
+     #       for subdomain in bf_doc:
+      #          site = subdomain + "." + dom
+       #         if site not in new_sites:
+        #            current = site[:]
+         #           new_sites.append(current)
 
         print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
