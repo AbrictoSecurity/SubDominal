@@ -17,10 +17,10 @@ parser.add_argument('--domain', '-d', dest="domain", type=str, required=True,
 parser.add_argument('--sub', '-s', dest="sub", type=str,
                     help='Additonal subdomain list.')
 parser.add_argument('--brute', '-b', default=False, action="store_true",
-                    help='This flag extends the scan for all possible combinations of 2 to 4 characters. Warning'
-                         'This will take a while.')
+                    help='This flag extends the scan for all possible combinations of 2 to 4 characters. Warning:'
+                         ' This will take a while.')
 parser.add_argument('--deep', '-dp', default=False, action="store_true",
-                    help="scans for subdomains within subdomains. Like 'abc.abc.google.com'")
+                    help="Scans for subdomains within subdomains. Like 'abc.abc.google.com'")
 
 args = parser.parse_args()
 
@@ -234,8 +234,8 @@ def main():
     """ + ENDC)
 
     print(BLUE + "\n\tWhen defining the domain to be scanned, use the parent domain.")
-    print("\tLike: 'google.com' or 'company.org'")
-    print("\t\tHAPPY HUNTING!!!'\n\n" + ENDC)
+    print("\tLike: 'google.com' or 'company.org'\n")
+    print("\t\t\tHAPPY HUNTING!!!'\n\n" + ENDC)
 
     domain = args.domain
 
