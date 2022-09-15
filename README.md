@@ -7,6 +7,8 @@ SubDominal is a subdomain enumeration tool that leverages the top 10,000 subdoma
 ## Install
 ```
 git clone https://github.com/AbrictoSecurity/SubDominal.git
+cd SubDominal
+pip3 install -r requirements.txt
 ```
 
 ## Add Shodan API Key
@@ -21,11 +23,8 @@ Add your Shodan API key to the subdom.py file.
 
 ## Run/Operate
 ```
-python3 subdom.py
+python3 subdom.py -h 
 ```
 
 ## Notes
-Make sure that you have dnspython installed.
-```
-pip3 install dnspython
-```
+Be careful with the bruteforce option as it will take time and it will create a lot of noise.
