@@ -231,7 +231,8 @@ def main():
     """ + ENDC)
 
     print(BLUE + "\n\tWhen defining the domain to be scanned, use the parent domain.")
-    print("\tLike: 'google.com' or 'company.org'\n\n" + ENDC)
+    print("\tLike: 'google.com' or 'company.org'")
+    print("\t\tHAPPY HUNTING!!!'\n\n" + ENDC)
 
     domain = args.domain
 
