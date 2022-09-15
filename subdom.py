@@ -241,7 +241,7 @@ def main():
 
     if args.brute:
         names = ['xaa', 'xab', 'xac', 'xad']
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
@@ -261,7 +261,7 @@ def main():
             sites.append(current)
     if args.brute:
         bar2 = IncrementalBar('Creating possible subdomains', max=216352)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
     if additional:
@@ -279,14 +279,14 @@ def main():
     if args.brute:
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xae', 'xaf', 'xag', 'xah', 'xai']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -295,14 +295,14 @@ def main():
 
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xaj', 'xak', 'xal', 'xam', 'xan']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -310,14 +310,14 @@ def main():
             executor.map(scandns, sites)
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xao', 'xap', 'xaq', 'xar', 'xas']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -325,14 +325,14 @@ def main():
             executor.map(scandns, sites)
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xat', 'xau', 'xav', 'xaw', 'xax']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -340,14 +340,14 @@ def main():
             executor.map(scandns, sites)
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xay', 'xaz', 'xba', 'xbb', 'xbc']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -355,14 +355,14 @@ def main():
             executor.map(scandns, sites)
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xbd', 'xbe', 'xbf', 'xbg', 'xbh']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -370,14 +370,14 @@ def main():
             executor.map(scandns, sites)
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xbi', 'xbj', 'xbk', 'xbl', 'xbm']
         bar = IncrementalBar('Loading values', max=256000)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=256000)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
@@ -385,14 +385,14 @@ def main():
             executor.map(scandns, sites)
         sites.clear()
         bf_doc.clear()
-        print("----Adding values----")
+        print("\n\t----Adding values----\n")
         names = ['xbn', 'xbo', 'xbp']
         bar = IncrementalBar('Loading values', max=133100)
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(add_file_content, names)
         names.clear()
         bar2 = IncrementalBar('Creating possible subdomains', max=133100)
-        print("----Creating domain possibilities----")
+        print("\n\t----Creating domain possibilities----\n")
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
