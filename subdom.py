@@ -130,7 +130,7 @@ def scandns(sites):
                     print("[+] Subdomain:" + sites + " : IP being: " + name + "\n")
                     up = "echo 'Subdomain Found!:  " + sites + " with the IP of: " + name + r" \n ' >> ./" + domain + "_subdomain_scan.txt"
                     subprocess.call(up, shell=True)
-                    add_subs = f"echo {sites}  >> ./{sites}_subdomains.txt"
+                    add_subs = f"echo '{sites}'  >> ./{sites}_subdomains.txt"
                     subprocess.call(add_subs, shell=True)
                     if sites not in site2:
                         current = sites[:]
