@@ -22,6 +22,10 @@ parser.add_argument('--brute', '-b', default=False, action="store_true",
 parser.add_argument('--deep', '-dp', default=False, action="store_true",
                     help="Scans for subdomains within subdomains. Like 'abc.abc.google.com'")
 
+parser.add_argument('--sslmate', '-sm', dest="sslmate", type=str, default="none",
+                    help='If you have an sslmate API key, input here!')
+
+
 args = parser.parse_args()
 
 bf_doc = []
@@ -44,6 +48,28 @@ UNDERLINE = '\033[4m'
 
 site2 = []
 ips = []
+
+
+def smate(domain):
+    url = f"https://api.certspotter.com/v1/issuances?domain={domain}&include_subdomains=true&expand=dns_names"
+    if args.sslmate != 'none':
+        header = {"Authorization": "Bearer " + args.sslmate_key}
+        req = requests.get(url=url, headers=header)
+    else:
+        req = requests.get(url=url)
+    file = open(".temp.txt", 'w')
+    file.write(req.text)
+    file.close()
+    sed = "sed -i 's+" + '"' + r"+\n+g' .temp.txt"
+    subprocess.call(sed, shell=True)
+    cat = f"cat .temp.txt | grep '{domain}' | cut -d '" + '"' + f"' -f 2 > {domain}_cert_transparent.txt"
+    subprocess.call(cat, shell=True)
+    sed = r"sed -i 's+*.++g' .temp.txt"
+    subprocess.call(sed, shell=True)
+    cat = f"cat .temp.txt | grep '{domain}' | cut -d '" + '"' + f"' -f 2 > {domain}_clean_cert_transparent.txt"
+    subprocess.call(cat, shell=True)
+    clean = "rm .temp.txt"
+    subprocess.call(clean, shell=True)
 
 
 def wayback(sites):
@@ -125,7 +151,7 @@ def scandns(sites):
                                 inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_scan.txt "
                                 subprocess.call(inputfile, shell=True)
 
-def shodan_scan(ipss):
+def shodan_scan(ips):
     no_ip = {"127.0.0.1"}
     for ip in ips:
         if ip not in no_ip:
@@ -172,7 +198,7 @@ def create_domain(subdomain):
         sites.append(current)
 
 
-def shodan_scan_domain(sites):
+def shodan_scan_domain():
     for site in site2:
         try:
             api = Shodan(s_api_key)
@@ -244,6 +270,14 @@ def main():
     subdomains = content.splitlines()
     file.close()
     bar = IncrementalBar('Loading values', max=216352)
+    smate(domain)
+    file = open(f"{domain}_clean_cert_transparent.txt", 'r')
+    for l in file:
+        current = l.strip()
+        if current != "":
+            if current not in sites:
+                sites.append(current)
+    file.close()
 
     if args.brute:
         names = ['xaa', 'xab', 'xac', 'xad']
