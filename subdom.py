@@ -50,6 +50,22 @@ site2 = []
 ips = []
 
 
+def cn_scan(domain):
+    url = f"https://crt.sh/?CN={domain}"
+    req = requests.get(url=url)
+    file = open(".temp.txt", 'w')
+    file.write(req.text)
+    file.close()
+    cut = f"cat .temp.txt | grep {domain}| cut -d '>' -f 2 | cut -d '<' -f 1 | sort " \
+          f"| uniq | grep -v 'Type:' | sed -e 's+*.++g' | sed -e 's+?.++g' > {domain}_clean_crt_scan.txt"
+    subprocess.call(cut, shell=True)
+    cut = f"cat .temp.txt | grep {domain}| cut -d '>' -f 2 | cut -d '<' -f 1 | sort " \
+          f"| uniq | grep -v 'Type:' | sed -e 's+?.++g' > {domain}_crt_scan.txt"
+    subprocess.call(cut, shell=True)
+    clean = "rm .temp.txt"
+    subprocess.call(clean, shell=True)
+
+
 def smate(domain):
     url = f"https://api.certspotter.com/v1/issuances?domain={domain}&include_subdomains=true&expand=dns_names"
     if args.sslmate != 'none':
@@ -272,6 +288,15 @@ def main():
     bar = IncrementalBar('Loading values', max=216352)
     smate(domain)
     file = open(f"{domain}_clean_cert_transparent.txt", 'r')
+    for l in file:
+        current = l.strip()
+        if current != "":
+            if current not in sites:
+                sites.append(current)
+    file.close()
+
+    cn_scan(domain)
+    file = open(f"{domain}_clean_crt_scan.txt", 'r')
     for l in file:
         current = l.strip()
         if current != "":
