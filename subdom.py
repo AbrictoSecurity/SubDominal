@@ -53,7 +53,7 @@ ips = []
 def smate(domain):
     url = f"https://api.certspotter.com/v1/issuances?domain={domain}&include_subdomains=true&expand=dns_names"
     if args.sslmate != 'none':
-        header = {"Authorization": "Bearer " + args.sslmate_key}
+        header = {"Authorization": "Bearer " + args.sslmate}
         req = requests.get(url=url, headers=header)
     else:
         req = requests.get(url=url)
