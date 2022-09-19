@@ -303,6 +303,21 @@ def main():
             if current not in sites:
                 sites.append(current)
     file.close()
+    site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
+    response_2 = requests.get(site_1)
+    response_fin = response_2.text
+    file = open(domain + "_way_osint.txt", "w")
+    file.write(response_fin)
+    file.close()
+    clean = f"cat {domain}_way_osint.txt | cut -d '/' -f 3 | cut -d ':' -f 1 | sort | uniq > {domain}_way_clean.txt"
+    subprocess.call(clean, shell=True)
+    file = open(f"{domain}_way_clean.txt", 'r')
+    for l in file:
+        current = l.strip()
+        if current != "":
+            if current not in sites:
+                sites.append(current)
+    file.close()
 
     if args.brute:
         names = ['xaa', 'xab', 'xac', 'xad']
@@ -489,12 +504,9 @@ def main():
         executor.map(wayback, site2)
 
     print(GREEN + "\n\t-----We are looking for interesting urls within the Wayback Machine for " + domain + "-----\n" + ENDC)
+
     site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
     response_2 = requests.get(site_1)
-    response_fin = response_2.text
-    file = open(domain + "_way_osint.txt", "w")
-    file.write(response_fin)
-    file.close()
 
     pars = ["user=", "pass=", "password=", "pword=", "username=", "token=", "secret=",
             "email=", "admin=", "administrator=", "jsession=", "jsessionid=", "userid=", ]
