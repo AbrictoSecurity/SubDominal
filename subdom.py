@@ -22,7 +22,7 @@ parser.add_argument('--brute', '-b', default=False, action="store_true",
                          ' This will take a while.')
 parser.add_argument('--deep', '-dp', default=False, action="store_true",
                     help="Scans for subdomains within subdomains. Like 'abc.abc.google.com'")
-parser.add_argument('--shodan', '-s', default=False, action="store_true",
+parser.add_argument('--shodan', '-sd', default=False, action="store_true",
                     help="To conduct a shodan scan on the results. This requires an API key within Config/config.py.")
 
 parser.add_argument('--way_osint', '-wo', default=False, action="store_true",
