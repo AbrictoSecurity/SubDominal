@@ -533,7 +533,7 @@ def main():
             pass
         print(GREEN + "\n\t-----Conducting Shodan Scan-----\n" + ENDC)
         shodan_scan(ips)
-        shodan_scan_domain(site2)
+        shodan_scan_domain()
 
 
     print(BOLD + "\n\nThanks for using SubDominal!\n\n" + ENDC)
