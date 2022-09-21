@@ -490,7 +490,7 @@ def main():
 
     if args.deep:
         length = len(site2)
-        bar_deep = IncrementalBar('Deep Scanning Subdomains:', max=length)
+        bar_deep = IncrementalBar('Creating list for Deep Scan:', max=length)
         for dom in site2:
             bar_deep.next()
             for subdomain in subdomains:
