@@ -8,6 +8,7 @@ import shodan
 import os
 import argparse
 from progress.bar import IncrementalBar
+from Config import config
 
 
 parser = argparse.ArgumentParser(description='Subdomain Eunmeration tool')
@@ -21,9 +22,8 @@ parser.add_argument('--brute', '-b', default=False, action="store_true",
                          ' This will take a while.')
 parser.add_argument('--deep', '-dp', default=False, action="store_true",
                     help="Scans for subdomains within subdomains. Like 'abc.abc.google.com'")
-
-parser.add_argument('--sslmate', '-sm', dest="sslmate", type=str, default="none",
-                    help='If you have an sslmate API key, input here!')
+parser.add_argument('--shodan', '-s', default=False, action="store_true",
+                    help="To conduct a shodan scan on the results. This requires an API key within Config/config.py.")
 
 parser.add_argument('--way_osint', '-wo', default=False, action="store_true",
                     help="Looks for sensitive get parameters within the wayback.")
@@ -36,10 +36,6 @@ args = parser.parse_args()
 bf_doc = []
 sites = []
 new_sites = []
-### CONFIG API Keys ###
-#### Shodan API KEY GOES HERE ###
-s_api_key = ""
-###################
 
 
 BLUE = '\033[94m'
@@ -73,8 +69,8 @@ def cn_scan(domain):
 
 def smate(domain):
     url = f"https://api.certspotter.com/v1/issuances?domain={domain}&include_subdomains=true&expand=dns_names"
-    if args.sslmate != 'none':
-        header = {"Authorization": "Bearer " + args.sslmate}
+    if config.sslmate != "":
+        header = {"Authorization": "Bearer " + config.sslmate}
         req = requests.get(url=url, headers=header)
     else:
         req = requests.get(url=url)
@@ -177,7 +173,7 @@ def shodan_scan(ips):
     for ip in ips:
         if ip not in no_ip:
             try:
-                api = Shodan(s_api_key)
+                api = Shodan(config.s_api_key)
                 data = api.search(ip)
                 file = shodan_folder + "/" + ip + "_shodan_scan.txt"
                 print(BLUE + "[+] -- Shodan Scan on - " + WHITE + BOLD + ip + ENDC)
@@ -188,11 +184,11 @@ def shodan_scan(ips):
                 dat = json.dumps(data)
                 file1 += "{}".format(dat)
                 file1 += "\n\n*************************MARANTRAL******************************\n\n"
-                file1 += "\n\n*************************MARANTRAL******************************\n\n"
-                file1 += "\n\n*************************MARANTRAL******************************\n\n"
                 filewrite = open(file, "w")
                 filewrite.write(file1)
                 filewrite.close()
+                sed = rf"sed -i 's+,+\n+g' {file1}"
+                subprocess.call(sed, shell=True)
 
             except shodan.APIError as e:
                 print("\nThere was an Error: ")
@@ -222,7 +218,7 @@ def create_domain(subdomain):
 def shodan_scan_domain():
     for site in site2:
         try:
-            api = Shodan(s_api_key)
+            api = Shodan(config.s_api_key)
             data = api.search(site)
             file = shodan_folder + "/" + site + "_shodan_scan.txt"
             print(BLUE + "[+] -- Shodan Scan on - " + WHITE + BOLD + site + ENDC)
@@ -233,11 +229,11 @@ def shodan_scan_domain():
             dat = json.dumps(data)
             file1 += "{}".format(dat)
             file1 += "\n\n*************************MARANTRAL******************************\n\n"
-            file1 += "\n\n*************************MARANTRAL******************************\n\n"
-            file1 += "\n\n*************************MARANTRAL******************************\n\n"
             filewrite = open(file, "w")
             filewrite.write(file1)
             filewrite.close()
+            sed = rf"sed -i 's+,+\n+g' {file1}"
+            subprocess.call(sed, shell=True)
 
         except shodan.APIError as e:
             print("\nThere was an Error: ")
@@ -525,15 +521,16 @@ def main():
         print(BLUE + "\n\tThere might be other interesting values within the parameters that we might not have found "
                      "automatically.\n\tTake a look manually!" + ENDC)
 
-    shodan_folder = domain + "_Shodan"
-    if s_api_key != "":
-        try:
-            os.mkdir(shodan_folder)
-        except:
-            pass
-        print(GREEN + "\n\t-----Conducting Shodan Scan-----\n" + ENDC)
-        shodan_scan(ips)
-        shodan_scan_domain()
+    if args.shodan:
+        shodan_folder = domain + "_Shodan"
+        if config.s_api_key != "":
+            try:
+                os.mkdir(shodan_folder)
+            except:
+                pass
+            print(GREEN + "\n\t-----Conducting Shodan Scan-----\n" + ENDC)
+            shodan_scan(ips)
+            shodan_scan_domain()
 
 
     print(BOLD + "\n\nThanks for using SubDominal!\n\n" + ENDC)
