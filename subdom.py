@@ -25,6 +25,11 @@ parser.add_argument('--deep', '-dp', default=False, action="store_true",
 parser.add_argument('--sslmate', '-sm', dest="sslmate", type=str, default="none",
                     help='If you have an sslmate API key, input here!')
 
+parser.add_argument('--way_osint', '-wo', default=False, action="store_true",
+                    help="Looks for sensitive get parameters within the wayback.")
+
+parser.add_argument('--way_history', '-wh', default=False, action="store_true",
+                    help="Looks for if the wayback machine has copied this site in the past.")
 
 args = parser.parse_args()
 
@@ -497,27 +502,28 @@ def main():
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(scandns, new_sites)
 
-    print(BLUE + "\n\t-----Conducting Wayback Machine Scan-----\n" + ENDC)
-    up = r"echo '----- Wayback scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
-    subprocess.call(up, shell=True)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-        executor.map(wayback, site2)
+    if args.way_history:
+        print(BLUE + "\n\t-----Conducting Wayback Machine Scan-----\n" + ENDC)
+        up = r"echo '----- Wayback scan of " + domain + r" ----- \n\n' > ./" + domain + "_wayback_scan.txt"
+        subprocess.call(up, shell=True)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(wayback, site2)
+    if args.way_osint:
+        print(GREEN + "\n\t-----We are looking for interesting urls within the Wayback Machine for " + domain + "-----\n" + ENDC)
 
-    print(GREEN + "\n\t-----We are looking for interesting urls within the Wayback Machine for " + domain + "-----\n" + ENDC)
+        site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
+        response_2 = requests.get(site_1)
 
-    site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
-    response_2 = requests.get(site_1)
+        pars = ["user=", "pass=", "password=", "pword=", "username=", "token=", "secret=",
+                "email=", "admin=", "administrator=", "jsession=", "jsessionid=", "userid=", ]
 
-    pars = ["user=", "pass=", "password=", "pword=", "username=", "token=", "secret=",
-            "email=", "admin=", "administrator=", "jsession=", "jsessionid=", "userid=", ]
+        for p in pars:
+            for line in response_2.iter_lines():
+                if p in line.decode("utf-8").lower():
+                    print(BLUE + "\n\tPotential interesting " + p + " parameter found: " + BOLD + ERROR + line.decode("utf-8") + ENDC)
 
-    for p in pars:
-        for line in response_2.iter_lines():
-            if p in line.decode("utf-8").lower():
-                print(BLUE + "\n\tPotential interesting " + p + " parameter found: " + BOLD + ERROR + line.decode("utf-8") + ENDC)
-
-    print(BLUE + "\n\tThere might be other interesting values within the parameters that we might not have found "
-                 "automatically.\n\tTake a look manually!" + ENDC)
+        print(BLUE + "\n\tThere might be other interesting values within the parameters that we might not have found "
+                     "automatically.\n\tTake a look manually!" + ENDC)
 
     shodan_folder = domain + "_Shodan"
     if s_api_key != "":
@@ -530,8 +536,6 @@ def main():
         shodan_scan_domain(site2)
 
 
-    print("\n\tOutput files are: \n\t" + GREEN + domain + "_subdomain_scan.txt \n\t" + domain
-          + "_wayback_scan.txt \n\t" + domain + "_way_osint.txt\n" + "\n\n\tShodan scans in: " + shodan_folder + ENDC)
     print(BOLD + "\n\nThanks for using SubDominal!\n\n" + ENDC)
 
 
