@@ -110,8 +110,7 @@ def wayback(sites):
 def scandns(sites):
     if deep:
         bar3.next()
-    if nscan:
-        bar_scan.next()
+
     isp = {"23.202.231.169", "23.221.222.250"}
     ddns = {'.herokudns.com', ".herokuapp.com", ".herokussl.com", ".azurewebsites.net", ".cloudapp.net",
             ".azure-api.net", ".trafficmanager.net", ".azureedge.net", ".cloudapp.azure.com", ".cloudfront.net",
@@ -249,8 +248,8 @@ def shodan_scan_domain():
 def main():
     global domain
     global shodan_folder
-    global bar, bar2, bar3, bar_scan
-    global deep, nscan
+    global bar, bar2, bar3
+    global deep
     deep = False
 
     print(BOLD + ERROR + r"""
@@ -485,11 +484,10 @@ def main():
             executor.map(create_domain, bf_doc)
         print(GREEN + "\n\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
         length = len(sites)
-        bar_scan = IncrementalBar('Scanning Subdomains:', max=length)
-        nscan = True
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(scandns, sites)
-        nscan = False
+        
     if args.deep:
         for dom in site2:
             for subdomain in subdomains:
