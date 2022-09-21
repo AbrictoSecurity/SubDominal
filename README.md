@@ -11,10 +11,10 @@ cd SubDominal
 pip3 install -r requirements.txt
 ```
 
-## Add Shodan API Key
+## Add API Keys
 ```
-cd SubDominal
-nano subdom.py
+cd SubDominal/Config
+nano config.py
 ```
 Add your Shodan API key to the subdom.py file. 
 <p align="center">
