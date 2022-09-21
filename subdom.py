@@ -110,8 +110,6 @@ def wayback(sites):
 def scandns(sites):
     if deep:
         bar3.next()
-    if nscan:
-        bar_scan.next()
     isp = {"23.202.231.169", "23.221.222.250"}
     ddns = {'.herokudns.com', ".herokuapp.com", ".herokussl.com", ".azurewebsites.net", ".cloudapp.net",
             ".azure-api.net", ".trafficmanager.net", ".azureedge.net", ".cloudapp.azure.com", ".cloudfront.net",
