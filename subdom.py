@@ -3,6 +3,7 @@ import subprocess
 import concurrent.futures
 import json
 import requests
+from progress.spinner import Spinner
 from shodan import Shodan
 import shodan
 import os
@@ -495,8 +496,14 @@ def main():
                         new_sites.append(current)
 
         print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
+        spinner = Spinner('DIGGING DEEPER')
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-            executor.map(scandns, new_sites)
+            results = executor.map(scandns, new_sites)
+            for connection in concurrent.futures.as_completed(results):
+                spinner.next()
+        spinner.writeln("\033[F")
+        spinner.finish()
+
 
     if args.way_history:
         print(BLUE + "\n\t-----Conducting Wayback Machine Scan-----\n" + ENDC)
