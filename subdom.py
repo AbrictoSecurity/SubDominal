@@ -187,7 +187,7 @@ def shodan_scan(ips):
                 filewrite = open(file, "w")
                 filewrite.write(file1)
                 filewrite.close()
-                sed = rf"sed -i 's+,+\n+g' {file1}"
+                sed = rf"sed -i 's+,+\n+g' {file}"
                 subprocess.call(sed, shell=True)
 
             except shodan.APIError as e:
@@ -232,7 +232,7 @@ def shodan_scan_domain():
             filewrite = open(file, "w")
             filewrite.write(file1)
             filewrite.close()
-            sed = rf"sed -i 's+,+\n+g' {file1}"
+            sed = rf"sed -i 's+,+\n+g' {file}"
             subprocess.call(sed, shell=True)
 
         except shodan.APIError as e:
