@@ -219,6 +219,22 @@ def create_domain(subdomain):
         sites.append(current)
 
 
+def create_deep(dom):
+    bar_deep.next()
+    for subdomain in subdomains:
+        site = subdomain + "." + dom
+        if site not in new_sites:
+            current = site[:]
+            new_sites.append(current)
+
+    if additional:
+        for subdomain in add:
+            site = subdomain + "." + dom
+            if site not in new_sites:
+                current = site[:]
+                new_sites.append(current)
+
+
 def shodan_scan_domain():
     for site in site2:
         try:
@@ -246,10 +262,10 @@ def shodan_scan_domain():
 
 
 def main():
-    global domain
+    global domain, subdomains
     global shodan_folder
-    global bar, bar2, bar3
-    global deep
+    global bar, bar2, bar3, bar_deep
+    global deep, additional, add
     deep = False
 
     print(BOLD + ERROR + r"""
@@ -491,20 +507,8 @@ def main():
     if args.deep:
         length = len(site2)
         bar_deep = IncrementalBar('Creating list for Deep Scan:', max=length)
-        for dom in site2:
-            bar_deep.next()
-            for subdomain in subdomains:
-                site = subdomain + "." + dom
-                if site not in new_sites:
-                    current = site[:]
-                    new_sites.append(current)
-
-            if additional:
-                for subdomain in add:
-                    site = subdomain + "." + dom
-                    if site not in new_sites:
-                        current = site[:]
-                        new_sites.append(current)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(create_deep, site2)
         bar_deep.finish()
 
         print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
