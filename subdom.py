@@ -487,9 +487,12 @@ def main():
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(scandns, sites)
-        
+
     if args.deep:
+        length = len(site2)
+        bar_deep = IncrementalBar('Deep Scanning Subdomains:', max=length)
         for dom in site2:
+            bar_deep.next()
             for subdomain in subdomains:
                 site = subdomain + "." + dom
                 if site not in new_sites:
@@ -502,6 +505,7 @@ def main():
                     if site not in new_sites:
                         current = site[:]
                         new_sites.append(current)
+        bar_deep.finish()
 
         print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
         length = len(new_sites)
