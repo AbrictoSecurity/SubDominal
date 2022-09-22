@@ -525,6 +525,8 @@ def main():
             val_num = length // 5
             sub_list = [new_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
             amount = [0,1,2,3,4,5]
+            print(sub_list[0])
+            print(sub_list[1])
             for i in amount:
                 bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_num)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
