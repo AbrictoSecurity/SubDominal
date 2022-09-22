@@ -214,15 +214,16 @@ def add_file_content(ns):
 
 
 def create_domain(subdomain):
-    bar2.next()
+
     site = subdomain + "." + domain
     if site not in sites:
         current = site[:]
         sites.append(current)
+    bar2.next()
 
 
 def create_deep(dom):
-    bar_deep.next()
+
     for subdomain in subdomains:
         site = subdomain + "." + dom
         if site not in new_sites:
@@ -235,6 +236,7 @@ def create_deep(dom):
             if site not in new_sites:
                 current = site[:]
                 new_sites.append(current)
+    bar_deep.next()
 
 
 def shodan_scan_domain():
@@ -514,14 +516,14 @@ def main():
             bar_deep = IncrementalBar('Creating list for Deep Scan:', max=length)
             with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                 executor.map(create_deep, site2)
-
-            print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
+            bar_deep.finish()
+            print(GREEN + "\n\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
             length_1 = len(new_sites)
             bar3 = IncrementalBar('Deep Scanning Subdomains:', max=length_1)
             deep = True
             with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                 executor.map(scandns, new_sites)
-            bar_deep.finish()
+            bar3.finish()
             new_sites.clear()
 
         elif length <= 120:
@@ -533,13 +535,14 @@ def main():
                 bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_sub)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(create_deep, sub_list[i])
-                print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
+                bar_deep.finish()
+                print(GREEN + "\n\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
                 length_1 = len(new_sites)
                 bar3 = IncrementalBar('Deep Scanning Subdomains:', max=length_1)
                 deep = True
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(scandns, new_sites)
-                bar_deep.finish()
+                bar3.finish()
                 new_sites.clear()
         elif length <= 400:
             val_num = length // 20
@@ -551,13 +554,14 @@ def main():
                 bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_sub)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(create_deep, sub_list[i])
-                print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
+                bar_deep.finish()
+                print(GREEN + "\n\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
                 length_1 = len(new_sites)
                 bar3 = IncrementalBar('Deep Scanning Subdomains:', max=length_1)
                 deep = True
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(scandns, new_sites)
-                bar_deep.finish()
+                bar3.finish()
                 new_sites.clear()
 
         else:
