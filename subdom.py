@@ -520,11 +520,12 @@ def main():
                 executor.map(scandns, new_sites)
             bar_deep.finish()
             new_sites.clear()
+
         elif length <= 120:
             val_num = length // 5
+            sub_list = [new_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
             amount = [0,1,2,3,4,5]
             for i in amount:
-                sub_list = [new_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
                 bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_num)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(create_deep, sub_list[i])
@@ -538,10 +539,11 @@ def main():
                 new_sites.clear()
         elif length <=400:
             val_num = length // 20
+            sub_list = [new_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
 
             amount = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
             for i in amount:
-                sub_list = [new_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
+
                 bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_num)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(create_deep, sub_list[i])
