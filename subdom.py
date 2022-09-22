@@ -1,3 +1,5 @@
+import time
+
 import dns.resolver
 import subprocess
 import concurrent.futures
@@ -254,6 +256,7 @@ def shodan_scan_domain():
             filewrite.close()
             sed = rf"sed -i 's+,+\n+g' {file}"
             subprocess.call(sed, shell=True)
+            time.sleep(1)
 
         except shodan.APIError as e:
             print("\nThere was an Error: ")
