@@ -529,7 +529,8 @@ def main():
             sub_list = [site2[x:x + val_num + 1] for x in range(0, length, val_num)]
             amount = [0, 1, 2, 3, 4, 5]
             for i in amount:
-                bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_num)
+                val_sub = len(sub_list[i])
+                bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_sub)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(create_deep, sub_list[i])
                 print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
@@ -546,8 +547,8 @@ def main():
 
             amount = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
             for i in amount:
-
-                bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_num)
+                val_sub = len(sub_list[i])
+                bar_deep = IncrementalBar('Creating list for Deep Scan:', max=val_sub)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
                     executor.map(create_deep, sub_list[i])
                 print(GREEN + "\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
