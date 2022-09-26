@@ -70,6 +70,20 @@ def cn_scan(domain):
     subprocess.call(clean, shell=True)
 
 
+def ht_scan(domain):
+    url = f"https://api.hackertarget.com/hostsearch/?q={domain}"
+    req = requests.get(url=url)
+    file = open(".temp.txt", 'w')
+    file.write(req.text)
+    file.close()
+    cut = f"cat .temp.txt | grep {domain} | cut -d ',' -f 1 | sort |uniq  > {domain}_clean_hackertarget_scan.txt"
+    subprocess.call(cut, shell=True)
+    cut = f"cat .temp.txt  > {domain}_hackertarget_scan.txt"
+    subprocess.call(cut, shell=True)
+    clean = "rm .temp.txt"
+    subprocess.call(clean, shell=True)
+
+
 def smate(domain):
     url = f"https://api.certspotter.com/v1/issuances?domain={domain}&include_subdomains=true&expand=dns_names"
     if config.sslmate != "":
@@ -354,6 +368,14 @@ def main():
     file.close()
     sectrails(domain)
     file = open(f"{domain}_clean_sectrails.txt", 'r')
+    for l in file:
+        current = l.strip()
+        if current != "":
+            if current not in sites:
+                sites.append(current)
+    file.close()
+    ht_scan(domain)
+    file = open(f"{domain}_clean_hackertarget_scan.txt", 'r')
     for l in file:
         current = l.strip()
         if current != "":
