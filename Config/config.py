@@ -5,3 +5,5 @@ s_api_key = ""
 #### SSL MATE API KEY GOES HERE ###
 sslmate = ""
 ###################
+#### Security Trails API KEY ####
+sec_trail = ""

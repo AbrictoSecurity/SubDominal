@@ -92,6 +92,27 @@ def smate(domain):
     subprocess.call(clean, shell=True)
 
 
+def sectrails(domain):
+    if config.sec_trail != "":
+        url = "https://api.securitytrails.com/v1/domain/nucor.com/subdomains?children_only=false&include_inactive=true"
+
+        headers = {
+            "accept": "application/json",
+            "APIKEY": f"{config.sec_trail}"
+        }
+
+        response = requests.get(url, headers=headers)
+        jdata = json.loads(response.text)
+        count = jdata['subdomain_count']
+        doc = ""
+        for i in range(0, count):
+            data = jdata['subdomains'][i]
+            doc += data
+        file = open(f"{domain}_clean_sectrails.txt", 'w')
+        file.write(doc)
+        file.close()
+
+
 def wayback(sites):
     response = requests.get("https://archive.org/wayback/available?url=" + sites)
     json_data = json.loads(response.text)
@@ -331,6 +352,15 @@ def main():
             if current not in sites:
                 sites.append(current)
     file.close()
+    sectrails(domain)
+    file = open(f"{domain}_clean_sectrails.txt", 'r')
+    for l in file:
+        current = l.strip()
+        if current != "":
+            if current not in sites:
+                sites.append(current)
+    file.close()
+
     site_1 = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey"
     response_2 = requests.get(site_1)
     response_fin = response_2.text
