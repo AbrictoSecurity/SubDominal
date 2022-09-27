@@ -343,7 +343,7 @@ def main():
     print("\t\t\tHAPPY HUNTING!!!'\n\n" + ENDC)
 
     domain = args.domain
-
+    sites.append(domain.strip)
     file = open("./lib/subdomains-10000.txt")
     content = file.read()
     subdomains = content.splitlines()
@@ -414,7 +414,7 @@ def main():
     except:
         additional = False
         pass
-    sites.append(domain.strip)
+
     for subdomain in subdomains:
         site = subdomain + "." + domain
         if site not in sites:
