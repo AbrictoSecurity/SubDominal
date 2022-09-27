@@ -414,6 +414,7 @@ def main():
     except:
         additional = False
         pass
+    sites.append(domain)
     for subdomain in subdomains:
         site = subdomain + "." + domain
         if site not in sites:
