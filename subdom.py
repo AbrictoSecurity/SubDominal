@@ -430,7 +430,9 @@ def main():
             pass
 
     else:
-        print(f"The domain: {domain} and IP: {wild_check} is a DNS wildcard which prevents good results.")
+        for rname in wild_check:
+            name = rname.to_text()
+        print(f"The domain: {domain} and IP: {name} is a DNS wildcard which prevents good results.")
 
     if wild_check == 'good':
         if args.brute:
