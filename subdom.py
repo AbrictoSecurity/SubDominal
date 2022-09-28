@@ -408,6 +408,11 @@ def main():
         content = file.read()
         subdomains = content.splitlines()
         file.close()
+        for subdomain in subdomains:
+            site = subdomain + "." + domain
+            if site not in sites:
+                current = site[:]
+                sites.append(current)
         if args.brute:
             names = ['xaa', 'xab', 'xac', 'xad']
             print("\n\t----Adding values----\n")
@@ -427,13 +432,6 @@ def main():
     else:
         print(f"The domain: {domain} and IP: {wild_check} is a DNS wildcard which prevents good results.")
 
-
-
-    for subdomain in subdomains:
-        site = subdomain + "." + domain
-        if site not in sites:
-            current = site[:]
-            sites.append(current)
     if wild_check == 'good':
         if args.brute:
             bar2 = IncrementalBar('Creating possible subdomains', max=216352)
