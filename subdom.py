@@ -59,8 +59,8 @@ def cn_scan(domain):
     file.write(req.text)
     file.close()
     cut = f"cat .temp.txt | grep {domain}| cut -d '>' -f 2 | cut -d '<' -f 1 | sort " \
-          rf"| uniq | grep -v 'Type:' | sed -e 's+*.++g' | sed -e 's+?.++g' | sed -e 's+Logged At\n++g'" \
-          rf"| sed -e 's+Group by Issuer\n++g' | sed -e 's+Issuer Name\n++g' | sed -e 's+crt.sh ID\n++g'" \
+          f"| uniq | grep -v 'Type:' | sed -e 's+*.++g' | sed -e 's+?.++g' | sed -e 's+Logged At++g'" \
+          f"| sed -e 's+Group by Issuer++g' | sed -e 's+Issuer Name++g' | sed -e 's+crt.sh ID++g'" \
           f" | sed -e 's+crt.sh | ++g'> {domain}_clean_crt_scan.txt"
     subprocess.call(cut, shell=True)
     cut = f"cat .temp.txt | grep {domain}| cut -d '>' -f 2 | cut -d '<' -f 1 | sort " \
