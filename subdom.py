@@ -433,6 +433,13 @@ def main():
         for rname in wild_check:
             name = rname.to_text()
         print(f"The domain: {domain} and IP: {name} is a DNS wildcard which prevents good results.")
+        for site in sites:
+            print(BLUE + "[?]" + ENDC + f" -- {site}\n")
+        print(ERROR + "\n\n\tTHIS MIGHT NOT BE RIGHT!!!" + ENDC)
+        print(GREEN + "\n\n\t-----Conducting DNS Subdomain Scan-----\n" + ENDC)
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(scandns, sites)
 
     if wild_check == 'good':
         if args.brute:
