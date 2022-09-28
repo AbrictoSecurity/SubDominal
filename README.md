@@ -16,7 +16,7 @@ pip3 install -r requirements.txt
 cd SubDominal/Config
 nano config.py
 ```
-Add your Shodan API key to the subdom.py file. 
+Add your API keys to the subdom.py file. 
 <p align="center">
   <img src="/imgs/api.png">
 </p>
