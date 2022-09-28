@@ -587,12 +587,30 @@ def main():
                 executor.map(scandns, sites)
 
         if args.deep:
-            length = len(site2)
+            wild_deep = []
+            for site in site2:
+                deep_check = wild_dns_check(f'marantral_trolling1337.{site}')
+                if deep_check == 'good':
+                    pass
+                else:
+                    if site not in wild_deep:
+                        print(f"Subdomain: {site} is a wildcard DNS, will respond to all requests.")
+                        current = site[:]
+                        wild_deep.append(current)
+            deep_sites = []
+            for site in site2:
+                if site not in deep_sites:
+                    if site not in wild_deep:
+                        current = site[:]
+                        deep_sites.append(current)
+
+
+            length = len(deep_sites)
 
             if length <= 10:
                 bar_deep = IncrementalBar('Creating list for Deep Scan:', max=length)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-                    executor.map(create_deep, site2)
+                    executor.map(create_deep, deep_sites)
                 bar_deep.finish()
                 print(GREEN + "\n\n\t-----Conducting DEEPER DNS Subdomain Scan-----\n" + ENDC)
                 length_1 = len(new_sites)
@@ -605,7 +623,7 @@ def main():
 
             elif length <= 120:
                 val_num = length // 5
-                sub_list = [site2[x:x + val_num + 1] for x in range(0, length, val_num)]
+                sub_list = [deep_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
                 amount = [0, 1, 2, 3, 4, 5]
                 for i in amount:
                     val_sub = len(sub_list[i])
@@ -623,7 +641,7 @@ def main():
                     new_sites.clear()
             elif length <= 400:
                 val_num = length // 20
-                sub_list = [site2[x:x + val_num + 1] for x in range(0, length, val_num)]
+                sub_list = [deep_sites[x:x + val_num + 1] for x in range(0, length, val_num)]
 
                 amount = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
                 for i in amount:
