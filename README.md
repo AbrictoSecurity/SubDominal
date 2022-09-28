@@ -2,7 +2,7 @@
 <p align="center">
   <img src="/imgs/subDom.png">
 </p>
-SubDominal is a subdomain enumeration tool that leverages the top 10,000 subdomains to check and see if they exist for a given domain. Then, if it returns a CNAME that's a known dynamic dns provider that's vulnerable to dangling dns pointers, it notifies you. It also reviews the Wayback Machine for senstive information and when those subdomains were last saved.
+SubDominal is a subdomain enumeration tool that leverages multiple methods and data sources to identify sub-domains. Then, if it returns a CNAME that's a known dynamic dns provider that's vulnerable to dangling dns pointers, it notifies you. It also reviews the Wayback Machine for senstive information and when those subdomains were last saved.
 
 ## Install
 ```
@@ -16,7 +16,7 @@ pip3 install -r requirements.txt
 cd SubDominal/Config
 nano config.py
 ```
-Add your Shodan API key to the subdom.py file. 
+Add your API keys to the subdom.py file. 
 <p align="center">
   <img src="/imgs/api.png">
 </p>
