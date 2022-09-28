@@ -108,7 +108,7 @@ def smate(domain):
 
 def sectrails(domain):
     if config.sec_trail != "":
-        url = "https://api.securitytrails.com/v1/domain/nucor.com/subdomains?children_only=false&include_inactive=true"
+        url = f"https://api.securitytrails.com/v1/domain/{domain}/subdomains?children_only=false&include_inactive=true"
 
         headers = {
             "accept": "application/json",
@@ -121,7 +121,7 @@ def sectrails(domain):
         doc = ""
         for i in range(0, count):
             data = jdata['subdomains'][i]
-            doc += data
+            doc += data + '\n'
         file = open(f"{domain}_clean_sectrails.txt", 'w')
         file.write(doc)
         file.close()
