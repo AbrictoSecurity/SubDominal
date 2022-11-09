@@ -371,7 +371,11 @@ def main():
             if current not in sites:
                 sites.append(current)
     file.close()
-    sectrails(domain)
+    if config.sec_trail != "":
+        try:
+            sectrails(domain)
+        except:
+            pass
     file = open(f"{domain}_clean_sectrails.txt", 'r')
     for l in file:
         current = l.strip() + f".{domain}"
