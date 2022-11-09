@@ -114,10 +114,8 @@ def sectrails(domain):
             "accept": "application/json",
             "APIKEY": f"{config.sec_trail}"
         }
-        print(url)
         response = requests.get(url, headers=headers)
         jdata = json.loads(response.text)
-        print(jdata)
         count = jdata['subdomain_count']
         doc = ""
         for i in range(0, count):
