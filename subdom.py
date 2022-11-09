@@ -114,9 +114,10 @@ def sectrails(domain):
             "accept": "application/json",
             "APIKEY": f"{config.sec_trail}"
         }
-
+        print(url)
         response = requests.get(url, headers=headers)
         jdata = json.loads(response.text)
+        print(jdata)
         count = jdata['subdomain_count']
         doc = ""
         for i in range(0, count):
@@ -371,19 +372,18 @@ def main():
             if current not in sites:
                 sites.append(current)
     file.close()
-    if config.sec_trail != "":
-        try:
-            print("Sec_Trail")
-            sectrails(domain)
-            file = open(f"{domain}_clean_sectrails.txt", 'r')
-            for l in file:
-                current = l.strip() + f".{domain}"
-                if current != "":
-                    if current not in sites:
-                        sites.append(current)
-            file.close()
-        except:
-            pass
+
+    try:
+        sectrails(domain)
+        file = open(f"{domain}_clean_sectrails.txt", 'r')
+        for l in file:
+            current = l.strip() + f".{domain}"
+            if current != "":
+                if current not in sites:
+                    sites.append(current)
+        file.close()
+    except:
+        pass
 
     ht_scan(domain)
     file = open(f"{domain}_clean_hackertarget_scan.txt", 'r')
