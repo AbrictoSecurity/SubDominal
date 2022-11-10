@@ -216,6 +216,9 @@ def scandns(sites):
                                 inputfile = "echo '  CNAME could be vulnerable to dangling DNS " + sites + " is:  " + c_val + " Which is connected to known Dangling DNS source: " + d + r"  you should check on that! \n' >> ./" + domain + "_subdomain_scan.txt "
                                 subprocess.call(inputfile, shell=True)
 
+                                output = f"echo {sites} >> {domain}_dangling_DNS.txt"
+                                subprocess.call(output, shell=True)
+
 def shodan_scan(ips):
     no_ip = {"127.0.0.1"}
     for ip in ips:
