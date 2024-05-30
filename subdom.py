@@ -428,12 +428,7 @@ def main():
                 if site not in sites:
                     current = site[:]
                     sites.append(current)
-                for number2 in number_list:
-                    site = subdomain + str(number2) + str(number) +"." + domain
-                    if site not in sites:
-                        current = site[:]
-                        sites.append(current)
-                        
+
         if args.brute:
             names = ['xaa', 'xab', 'xac', 'xad']
             print("\n\t----Adding values----\n")
