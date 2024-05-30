@@ -312,7 +312,7 @@ def shodan_scan_domain():
 
 def cert_trans_domains(domain):
     cert_domains_without_ip = []
-    command = f"cat {check_file} | grep '#\[tr_03116-\]' | tr -d ' \t' | cut -d ':' -f 3" # tr_03116- Check 
+    command = f"cat {domain}_clean_*.txt | sort | uniq" # tr_03116- Check 
     a = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     cert_domains = a.stdout.decode('utf-8').strip()
     for line in cert_domains.splitlines():
