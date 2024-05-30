@@ -138,12 +138,12 @@
 Cerrar
 Deténgase
 Halar
-I
+i
 Produce
 Radio
 a
-a su vez,
-a través de
+a-su-vez
+a-través-de
 a-dtap
 a1
 a2
@@ -364,7 +364,7 @@ akademik
 akamai
 akira
 al
-al este
+al-este
 ala
 alabama
 aladdin
@@ -901,7 +901,7 @@ bars
 bart
 bas
 base
-base de
+base-de
 base2
 baseball
 bash
@@ -2141,7 +2141,7 @@ ctx
 cu
 cualquier
 cuando
-cuarto de galón
+cuarto-de-galón
 cuatro
 cuba
 cube
@@ -2313,13 +2313,13 @@ ddns
 dds
 ddt
 de
-de altura
-de capital
-de cultivos
-de espesor
-de metal
-de nuevo
-de pie
+de-altura
+de-capital
+de-cultivos
+de-espesor
+de-metal
+de-nuevo
+de-pie
 de1
 de2
 dead
@@ -2932,7 +2932,7 @@ ekb
 eko
 ekonomi
 el
-el control
+el-control
 elab
 elan
 elara
@@ -3015,7 +3015,7 @@ empujar
 ems
 emu
 en
-en espera
+en-espera
 en2
 enc
 encajar
@@ -5307,7 +5307,7 @@ lms
 lms2
 ln
 lo
-lo hará
+lo-hará
 load
 loadtest
 loan
@@ -6258,7 +6258,7 @@ myweb
 mz
 máquina
 más
-más bien
+más-bien
 médico
 método
 música
@@ -6470,7 +6470,7 @@ nn
 nnovgorod
 nntp
 no
-no lo hará
+no-lo-hará
 noah
 nobel
 noc
@@ -7058,7 +7058,7 @@ partage
 parte
 partenaires
 particular
-particular,
+particular
 partido
 partner
 partner2
@@ -7333,7 +7333,7 @@ place
 placement
 plain
 plan
-plan de
+plan-de
 plana
 planck
 plane
@@ -7463,10 +7463,10 @@ pops
 populate
 popup
 por
-por encima de
-por favor
-por qué
-por tanto,
+por-encima-de
+por-favor
+por-qué
+por-tanto
 porn
 porno
 porsche
@@ -8589,9 +8589,9 @@ sdo
 sdp
 sds
 se
-se fue
-se ha ido
-se reúnen
+se-fue
+se-ha-ido
+se-reúnen
 sea
 seafight
 seal
@@ -8679,7 +8679,7 @@ separada
 separate
 sequoia
 ser
-ser distinto
+ser-distinto
 serenity
 sergey
 sergio
@@ -10249,7 +10249,7 @@ umi
 ums
 umu
 un
-una vez
+una-vez
 under
 underwear
 unesco
@@ -11221,7 +11221,7 @@ xyz
 xz
 y
 ya
-ya sea
+ya-sea
 yahoo
 yakutsk
 yamato
