@@ -310,6 +310,16 @@ def shodan_scan_domain():
             print(e)
             pass
 
+def cert_trans_domains(domain):
+    cert_domains_without_ip = []
+    command = f"cat {check_file} | grep '#\[tr_03116-\]' | tr -d ' \t' | cut -d ':' -f 3" # tr_03116- Check 
+    a = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    cert_domains = a.stdout.decode('utf-8').strip()
+    for line in cert_domains.splitlines():
+        if line.strip() not in site2:
+            if line.strip() not in cert_domains_without_ip:
+                cert_domains_without_ip.append(line.strip())
+    return cert_domains_without_ip
 
 def main():
     global domain, subdomains
@@ -708,6 +718,10 @@ def main():
             print(GREEN + "\n\t-----Conducting Shodan Scan-----\n" + ENDC)
             shodan_scan(ips)
             shodan_scan_domain()
+    cert_list = cert_trans_domains(domain)
+    print(BOLD + "\n\nThe following domains were identified through transparent certificates but do not have an A record:\n\n" + ENDC)
+    for item in cert_list:
+        print(f"Domain name: {item}")
 
 
     print(BOLD + "\n\nThanks for using SubDominal!\n\n" + ENDC)
