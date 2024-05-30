@@ -1,2 +1,3 @@
 # Ignore all text files
 *.txt
+/.idea
