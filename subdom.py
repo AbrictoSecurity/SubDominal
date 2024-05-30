@@ -417,11 +417,23 @@ def main():
         content = file.read()
         subdomains = content.splitlines()
         file.close()
+        number_list = [1,2,3,4,5,6,7,8,9,0]
         for subdomain in subdomains:
             site = subdomain + "." + domain
             if site not in sites:
                 current = site[:]
                 sites.append(current)
+            for number in number_list:
+                site = subdomain + str(number) +"." + domain
+                if site not in sites:
+                    current = site[:]
+                    sites.append(current)
+                for number2 in number_list:
+                    site = subdomain + str(number2) + str(number) +"." + domain
+                    if site not in sites:
+                        current = site[:]
+                        sites.append(current)
+                        
         if args.brute:
             names = ['xaa', 'xab', 'xac', 'xad']
             print("\n\t----Adding values----\n")
