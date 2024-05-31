@@ -36,7 +36,7 @@ class subscanner():
     
     parser.add_argument('--json', '-j', default=False, action="store_true",
                         help="Save output as a json file")
-    parser.add_argument('--json_filename', '-jf', default=f"{current_datetime}_subdominaloutput.json", action="store_true",
+    parser.add_argument('--json_filename', '-jf',type=str,  default=f"{current_datetime}_subdominaloutput.json",
                         help="json file name")
     
     json_list = []
