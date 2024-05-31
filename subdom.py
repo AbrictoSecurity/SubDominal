@@ -10,8 +10,10 @@ import os
 import argparse
 from progress.bar import IncrementalBar
 from Config import config
+from datetime import datetime
 
 class subscanner():
+    current_datetime = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     parser = argparse.ArgumentParser(description='Subdomain Eunmeration tool')
     parser.add_argument('--domain', '-d', dest="domain", type=str, required=True,
                         help='When defining the domain to be scanned, use the parent domain.\n\tLike: google.com or '
@@ -31,6 +33,14 @@ class subscanner():
 
     parser.add_argument('--way_history', '-wh', default=False, action="store_true",
                         help="Looks for if the wayback machine has copied this site in the past.")
+    
+    parser.add_argument('--json', '-j', default=False, action="store_true",
+                        help="Save output as a json file")
+    args = parser.parse_args()
+    parser.add_argument('--json_filename', '-jf', default=f"{current_datetime}_{args.domain}.json", action="store_true",
+                        help="Save output as a json file")
+    
+    json_list = []
 
     args = parser.parse_args()
 
@@ -182,6 +192,7 @@ class subscanner():
                 ".securepromotion.com", ".getbynder.com", ".certain.com", ".certainaws.com", ".eds.com", ".bluetie.com",
                 ".relayware.com", ".yodlee.com", ".mrooms.net", ".ssl.cdntwrk.com", ".secure.gooddata.com", ".deltacdn.net",
                 ".happyfox.com", ".proformaprostores.com", ".yext-cdn.com", ".edgecastdns.net", ".ecdns.net"}
+        json_add = '{"subdomain":"'+ sites + '","cname":"'
         q = dns.resolver.resolve(sites, 'A')
         for rname in q:
             name = rname.to_text()
@@ -204,11 +215,16 @@ class subscanner():
                             current = name[:]
                             self.ips.append(current)
                         q = dns.resolver.resolve(sites, 'CNAME')
+                        cval_check = False
+                        cname_check = False
                         for bong in q:
+                            cname_check = True
                             c_val = str(bong.target)
                             print(self.GREEN + "\n[+] The CNAME for " + sites + " is: " + c_val + self.ENDC)
+                            json_add += c_val + '","potential_ddns":"'
                             inputfile = "echo '  CNAME Results for " + sites + " is:  " + c_val + r" \n' >> ./" + domain + "_subdomain_scan.txt"
                             subprocess.call(inputfile, shell=True)
+                            cval_check = False
                             for d in ddns:
                                 if d in c_val:
                                     print(
@@ -218,6 +234,17 @@ class subscanner():
 
                                     output = f"echo {sites} >> {domain}_dangling_DNS.txt"
                                     subprocess.call(output, shell=True)
+                                    cval_check = True
+                        if cname_check:
+                            if cval_check:
+                                json_add += 'True"}'
+                            else:
+                                json_add += 'False"}'
+                        else:
+                            json_add  += '","potential_ddns":"False"}'
+                        if json_add not in self.json_list:
+                            self.json_list.append(json_add)
+
 
     def shodan_scan(self,ips):
         no_ip = {"127.0.0.1"}
@@ -321,6 +348,16 @@ class subscanner():
                     cert_domains_without_ip.append(line.strip())
         return cert_domains_without_ip
 
+    #def json_file_create(self,cert_translist,domain):
+       # command = f"cat {domain}_clean_*.txt | sort | uniq" 
+      #  a = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      #  cert_domains = a.stdout.decode('utf-8').strip()
+      #  for line in cert_domains.splitlines():
+        #    if line.strip() not in self.site2:
+       #         if line.strip() not in cert_domains_without_ip:
+      #              cert_domains_without_ip.append(line.strip())
+       # return cert_domains_without_ip
+
     def main(self):
         global domain, subdomains
         global shodan_folder
@@ -330,32 +367,32 @@ class subscanner():
 
         print(self.BOLD + self.ERROR + r"""
                     _____       _     _____                  _             _                  
-                    / ____|     | |   |  __ \                (_)           | |
-                | (___  _   _| |__ | |  | | ___  _ __ ___  _ _ __   __ _| |
-                    \___ \| | | | '_ \| |  | |/ _ \| '_ ` _ \| | '_ \ / _` | |
-                    ____) | |_| | |_) | |__| | (_) | | | | | | | | | | (_| | |
-                |_____/ \__,_|_.__/|_____/ \___/|_| |_| |_|_|_| |_|\__,_|_|
+                   / ____|     | |   |  __ \                (_)           | |
+                  | (___  _   _| |__ | |  | | ___  _ __ ___  _ _ __   __ _| |
+                   \___ \| | | | '_ \| |  | |/ _ \| '_ ` _ \| | '_ \ / _` | |
+                   ____) | |_| | |_) | |__| | (_) | | | | | | | | | | (_| | |
+                  |_____/ \__,_|_.__/|_____/ \___/|_| |_| |_|_|_| |_|\__,_|_|
                                                             
 
         """ + self.ENDC)
 
         print(self.GREEN + """
-                            _____             __         __  ___      
-                        / ___/______ ___ _/ /____ ___/ / / _ )__ __
+                          _____             __         __  ___      
+                         / ___/______ ___ _/ /____ ___/ / / _ )__ __
                         / /__/ __/ -_) _ `/ __/ -_) _  / / _  / // /
                         \___/_/  \__/\_,_/\__/\__/\_,_/ /____/\_, / 
                                                             /___/  
-                    __  ___                   __           __  ________      
-                    /  |/  /__ ________ ____  / /________ _/ / /_  __/ /  ___ 
-                / /|_/ / _ `/ __/ _ `/ _ \/ __/ __/ _ `/ /   / / / _ \/ -_)
+                   __  ___                   __           __  ________      
+                  /  |/  /__ ________ ____  / /________ _/ / /_  __/ /  ___ 
+                 / /|_/ / _ `/ __/ _ `/ _ \/ __/ __/ _ `/ /   / / / _ \/ -_)
                 /_/  /_/\_,_/_/  \_,_/_//_/\__/_/  \_,_/_/   /_/ /_//_/\__/ 
 
-                                __  ___          __           ____
+                             __  ___          __           ____
                             /  |/  /__ ____  / /________  / / /
-                            / /|_/ / _ `/ _ \/ __/ __/ _ \/ / / 
-                            /_/  /_/\_,_/_//_/\__/_/  \___/_/_/  
+                           / /|_/ / _ `/ _ \/ __/ __/ _ \/ / / 
+                          /_/  /_/\_,_/_//_/\__/_/  \___/_/_/  
 
-                                        Version 0.9 
+                                        Version 1.0
         """ + self.ENDC)
 
         print(self.BLUE + "\n\tWhen defining the domain to be scanned, use the parent domain.")
@@ -722,7 +759,9 @@ class subscanner():
         print(self.BOLD + "\n\nThe following domains were identified through transparent certificates but do not have an A record:\n\n" + self.ENDC)
         for item in cert_list:
             print(f"Domain name: {item}")
+       # if self.args.json:
 
+        print(self.json_list)
 
         print(self.BOLD + "\n\nThanks for using SubDominal!\n\n" + self.ENDC)
 
