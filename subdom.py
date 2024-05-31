@@ -350,7 +350,7 @@ class subscanner():
 
     def json_file_create(self,cert_translist):
         jsonsting = '{"active_hosts":' + str(self.json_list) +',"cert_transparent_hosts":' + str(cert_translist) + '}'
-        json_data = json.loads(jsonsting, indent=4)
+        json_data = json.loads(jsonsting)
         if '.json' in self.args.json_file:
             with open(self.args.json_file, 'w') as file:
                 file.write(json_data) 
