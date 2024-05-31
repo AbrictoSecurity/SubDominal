@@ -142,7 +142,7 @@ class subscanner():
         try:
             x = json_data["archived_snapshots"]["closest"]["status"]
             if x == "200":
-                print(GREEN + "[+] SUCCESS " + sites + ENDC)
+                print(self.GREEN + "[+] SUCCESS " + sites + self.ENDC)
                 y = json_data["archived_snapshots"]["closest"]["url"]
                 z: object = json_data["archived_snapshots"]["closest"]["timestamp"]
 
@@ -192,7 +192,7 @@ class subscanner():
                 ".securepromotion.com", ".getbynder.com", ".certain.com", ".certainaws.com", ".eds.com", ".bluetie.com",
                 ".relayware.com", ".yodlee.com", ".mrooms.net", ".ssl.cdntwrk.com", ".secure.gooddata.com", ".deltacdn.net",
                 ".happyfox.com", ".proformaprostores.com", ".yext-cdn.com", ".edgecastdns.net", ".ecdns.net"}
-        json_add = '{"subdomain":"'+ sites + '","cname":"'
+        json_add = '{"subdomain":"'+ sites + '","IP":"'
         q = dns.resolver.resolve(sites, 'A')
         for rname in q:
             name = rname.to_text()
@@ -204,6 +204,7 @@ class subscanner():
                         pass
                     else:
                         print("[+] Subdomain:" + sites + " : IP being: " + name + "\n")
+                        json_add += name + '","cname":"'
                         up = "echo 'Subdomain Found!:  " + sites + " with the IP of: " + name + r" \n ' >> ./" + domain + "_subdomain_scan.txt"
                         subprocess.call(up, shell=True)
                         add_subs = f"echo '{sites}'  >> ./{domain}_subdomains.txt"
@@ -348,15 +349,17 @@ class subscanner():
                     cert_domains_without_ip.append(line.strip())
         return cert_domains_without_ip
 
-    #def json_file_create(self,cert_translist,domain):
-       # command = f"cat {domain}_clean_*.txt | sort | uniq" 
-      #  a = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-      #  cert_domains = a.stdout.decode('utf-8').strip()
-      #  for line in cert_domains.splitlines():
-        #    if line.strip() not in self.site2:
-       #         if line.strip() not in cert_domains_without_ip:
-      #              cert_domains_without_ip.append(line.strip())
-       # return cert_domains_without_ip
+    def json_file_create(self,cert_translist):
+        jsonsting = '{"active_hosts":' + str(self.json_list) +',"cert_transparent_hosts":' + str(cert_translist) + '}'
+        json_data = json.loads(jsonsting, indent=4)
+        if '.json' in self.args.json_file:
+            with open(self.args.json_file, 'w') as file:
+                file.write(json_data) 
+        else:
+            with open(self.args.json_file + '.json', 'w') as file:
+                file.write(json_data)
+
+
 
     def main(self):
         global domain, subdomains
@@ -759,9 +762,8 @@ class subscanner():
         print(self.BOLD + "\n\nThe following domains were identified through transparent certificates but do not have an A record:\n\n" + self.ENDC)
         for item in cert_list:
             print(f"Domain name: {item}")
-       # if self.args.json:
-
-        print(self.json_list)
+        if self.args.json:
+            self.json_file_create(self,cert_list)
 
         print(self.BOLD + "\n\nThanks for using SubDominal!\n\n" + self.ENDC)
 
