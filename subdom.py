@@ -70,7 +70,7 @@ class subscanner():
         subprocess.call(clean, shell=True)
 
 
-    def ht_scan(domain):
+    def ht_scan(self,domain):
         url = f"https://api.hackertarget.com/hostsearch/?q={domain}"
         req = requests.get(url=url)
         file = open(".temp.txt", 'w')
