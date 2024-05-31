@@ -349,8 +349,8 @@ class subscanner():
         return cert_domains_without_ip
 
     def json_file_create(self,cert_translist):
-        jsonsting = '{"active_hosts":' + str(self.json_list) +',"cert_transparent_hosts":' + str(cert_translist) + '}'
-        string_json = '"' + jsonsting.replace("'","").replace('"','\\"') + '"'
+        jsonsting = '{"active_hosts":' + str(self.json_list).replace("'","") +',"cert_transparent_hosts":' + str(cert_translist).replace("'",'"') + '}'
+        string_json = '"' + jsonsting.replace('"','\\"') + '"'
         json_data = json.loads(string_json)
         if '.json' in self.args.json_filename:
             with open(self.args.json_filename, 'w') as file:
