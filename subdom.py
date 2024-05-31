@@ -762,7 +762,7 @@ class subscanner():
         for item in cert_list:
             print(f"Domain name: {item}")
         if self.args.json:
-            self.json_file_create(self,cert_list)
+            self.json_file_create(cert_translist=cert_list)
 
         print(self.BOLD + "\n\nThanks for using SubDominal!\n\n" + self.ENDC)
 
